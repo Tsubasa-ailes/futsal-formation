@@ -1,182 +1,192 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>TACT</title>
-
-  @vite(['resources/css/app.css', 'resources/js/app.js'])
-
-  <style>
-    body {
-      padding: 16px;
-      font-family: sans-serif;
-    }
-
-    .title {
-      font-size: 20px;
-      font-weight: 700;
-      margin: 0;
-    }
-
-    .sub-title {
-      font-size: 20px;
-      font-weight: 700;
-      margin: 4px 0 0;
-    }
-
-    .layout {
-      display: flex;
-      gap: 24px;
-      flex-wrap: wrap;
-      margin-top: 16px;
-    }
-
-    .section-title {
-      margin-bottom: 8px;
-      font-weight: 600;
-    }
-
-    .players-title {
-      margin-top: 16px;
-    }
-
-    .players div {
-      margin-top: 6px;
-    }
-
-    .players input {
-      border: 1px solid #ccc;
-      padding: 6px;
-      width: 220px;
-    }
-
-    .court {
-      width: 320px;
-      height: 500px;
-      border: 2px solid #111;
-      border-radius: 12px;
-      position: relative;
-      background: #0b7;
-    }
-
-    .line {
-      position: absolute;
-      left: 0;
-      right: 0;
-      top: 50%;
-      height: 2px;
-      background: #fff;
-      opacity: 0.8;
-    }
-
-    .circle {
-      position: absolute;
-      left: 50%;
-      top: 50%;
-      width: 80px;
-      height: 80px;
-      border: 2px solid #fff;
-      border-radius: 999px;
-      transform: translate(-50%, -50%);
-      opacity: 0.8;
-    }
-
-    .p {
-      position: absolute;
-      width: 80px;
-      padding: 6px 8px;
-      background: #fff;
-      border-radius: 999px;
-      text-align: center;
-      font-size: 12px;
-      transform: translate(-50%, -50%);
-      cursor: grab;
-      user-select: none;
-      touch-action: none;
-    }
-
-    .p.dragging {
-      cursor: grabbing;
-      z-index: 1000;
-    }
-
-    .pos-gk { left: 50%; top: 86%; }
-
-    .pos-2 { left: 30%; top: 65%; }
-    .pos-3 { left: 70%; top: 65%; }
-    .pos-4 { left: 30%; top: 30%; }
-    .pos-5 { left: 70%; top: 30%; }
-
-    .pos-121-df  { left: 50%; top: 68%; }
-    .pos-121-mf1 { left: 32%; top: 45%; }
-    .pos-121-mf2 { left: 68%; top: 45%; }
-    .pos-121-fw  { left: 50%; top: 23%; }
-
-    .pos-31-df1 { left: 20%; top: 55%; }
-    .pos-31-df2 { left: 50%; top: 55%; }
-    .pos-31-df3 { left: 80%; top: 55%; }
-    .pos-31-fw  { left: 50%; top: 23%; }
-
-    .btn {
-      margin-top: 12px;
-      padding: 8px 14px;
-      border: 1px solid #333;
-      width: 100%;
-      font-size: 16px;
-      border-radius: 6px;
-      background: #fff;
-      cursor: pointer;
-    }
-
-    .btn:hover {
-      background: #333;
-      color: white;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>フォーメーション編集</title>
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-<body>
-  <h1 class="title">フットサル フォーメーションメーカー</h1>
-  <h2 class="sub-title">TACT</h2>
+<body class="bg-black text-white min-h-screen">
+    <div class="max-w-6xl mx-auto py-8 px-4">
+        <h1 class="text-3xl font-bold mb-6 text-white">フォーメーション編集</h1>
 
-  <div class="layout">
-    <div class="left-panel">
-      <div class="section-title">フォーメーション</div>
-      <label><input type="radio" name="formation" value="22" checked> 2-2</label><br>
-      <label><input type="radio" name="formation" value="121"> 1-2-1</label><br>
-      <label><input type="radio" name="formation" value="31"> 3-1</label>
+        <div class="bg-gray-900 shadow-lg rounded-lg p-6 mb-6 border border-gray-800">
+            <form method="GET" action="{{ route('play.index') }}">
+                <label for="formation_template_id" class="block text-sm font-medium text-gray-300 mb-2">
+                    フォーメーション選択
+                </label>
 
-      <div class="section-title players-title">選手入力（5人）</div>
-      <div class="players">
-        <div>1 GK <input data-player-input="1" placeholder="名前"></div>
-        <div>2 FP <input data-player-input="2" placeholder="名前"></div>
-        <div>3 FP <input data-player-input="3" placeholder="名前"></div>
-        <div>4 FP <input data-player-input="4" placeholder="名前"></div>
-        <div>5 FP <input data-player-input="5" placeholder="名前"></div>
-      </div>
+                <div class="flex flex-wrap gap-3 items-center">
+                    <select
+                        name="formation_template_id"
+                        id="formation_template_id"
+                        class="border border-gray-700 rounded px-3 py-2 bg-gray-800 text-white"
+                    >
+                        @foreach ($templates as $template)
+                            <option
+                                value="{{ $template->id }}"
+                                {{ $selectedTemplate && $selectedTemplate->id === $template->id ? 'selected' : '' }}
+                            >
+                                {{ $template->name }}
+                            </option>
+                        @endforeach
+                    </select>
 
-      <button id="reset-btn" class="btn reset-btn">メンバーリセット</button>
-      <button id="formation-reset-btn" class="btn reset-btn">陣形リセット</button>
+                    <button
+                        type="submit"
+                        class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-4 py-2 rounded"
+                    >
+                        表示
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        @if ($selectedTemplate)
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <div class="bg-gray-900 shadow-lg rounded-lg p-6 border border-gray-800">
+                    <h2 class="text-lg font-bold mb-2 text-white">選択中のテンプレート</h2>
+                    <p class="text-gray-300 mb-1">
+                        <span class="font-semibold text-gray-100">名前:</span> {{ $selectedTemplate->name }}
+                    </p>
+                    <p class="text-gray-300 mb-4">
+                        <span class="font-semibold text-gray-100">コード:</span> {{ $selectedTemplate->formation_code }}
+                    </p>
+
+                    <h3 class="text-md font-bold mb-3 text-white">スロット一覧</h3>
+
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full border border-gray-700 text-sm text-white">
+                            <thead class="bg-gray-800">
+                                <tr>
+                                    <th class="border border-gray-700 px-4 py-2">slot</th>
+                                    <th class="border border-gray-700 px-4 py-2">role</th>
+                                    <th class="border border-gray-700 px-4 py-2">x</th>
+                                    <th class="border border-gray-700 px-4 py-2">y</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($selectedTemplate->slots as $slot)
+                                    <tr class="bg-gray-900">
+                                        <td class="border border-gray-700 px-4 py-2 text-center">{{ $slot->slot }}</td>
+                                        <td class="border border-gray-700 px-4 py-2 text-center">{{ $slot->role_label }}</td>
+                                        <td class="border border-gray-700 px-4 py-2 text-center">{{ $slot->default_x }}</td>
+                                        <td class="border border-gray-700 px-4 py-2 text-center">{{ $slot->default_y }}</td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="bg-gray-900 shadow-lg rounded-lg p-6 border border-gray-800">
+                    <h2 class="text-lg font-bold mb-4 text-white">コート表示</h2>
+
+                    <div style="display: flex; justify-content: center;">
+                        <div
+                            style="
+                                position: relative;
+                                width: 300px;
+                                height: 500px;
+                                background: #16a34a;
+                                border: 4px solid white;
+                                border-radius: 16px;
+                                overflow: hidden;
+                            "
+                        >
+                            <div
+                                style="
+                                    position: absolute;
+                                    inset: 0;
+                                    border: 2px solid white;
+                                    border-radius: 16px;
+                                "
+                            ></div>
+
+                            <div
+                                style="
+                                    position: absolute;
+                                    left: 50%;
+                                    top: 0;
+                                    transform: translateX(-50%);
+                                    width: 96px;
+                                    height: 40px;
+                                    border: 2px solid white;
+                                    border-top: 0;
+                                "
+                            ></div>
+
+                            <div
+                                style="
+                                    position: absolute;
+                                    left: 50%;
+                                    bottom: 0;
+                                    transform: translateX(-50%);
+                                    width: 96px;
+                                    height: 40px;
+                                    border: 2px solid white;
+                                    border-bottom: 0;
+                                "
+                            ></div>
+
+                            <div
+                                style="
+                                    position: absolute;
+                                    left: 0;
+                                    right: 0;
+                                    top: 50%;
+                                    border-top: 2px solid white;
+                                "
+                            ></div>
+
+                            <div
+                                style="
+                                    position: absolute;
+                                    left: 50%;
+                                    top: 50%;
+                                    transform: translate(-50%, -50%);
+                                    width: 80px;
+                                    height: 80px;
+                                    border: 2px solid white;
+                                    border-radius: 9999px;
+                                "
+                            ></div>
+
+                            @foreach ($selectedTemplate->slots as $slot)
+                                <div
+                                    style="
+                                        position: absolute;
+                                        left: {{ $slot->default_x }}%;
+                                        top: {{ $slot->default_y }}%;
+                                        transform: translate(-50%, -50%);
+                                        width: 56px;
+                                        height: 56px;
+                                        background: #2563eb;
+                                        color: white;
+                                        border-radius: 9999px;
+                                        display: flex;
+                                        flex-direction: column;
+                                        align-items: center;
+                                        justify-content: center;
+                                        font-weight: bold;
+                                        box-shadow: 0 4px 10px rgba(0,0,0,0.35);
+                                        font-size: 12px;
+                                        border: 2px solid rgba(255,255,255,0.25);
+                                    "
+                                >
+                                    <div style="font-size: 10px; line-height: 1;">{{ $slot->role_label }}</div>
+                                    <div style="font-size: 12px; line-height: 1; margin-top: 4px;">{{ $slot->slot }}</div>
+                                </div>
+                            @endforeach
+                        </div>
+                    </div>
+
+                    <p class="text-sm text-gray-400 mt-4 text-center">
+                        いまはテンプレ座標を表示しています
+                    </p>
+                </div>
+            </div>
+        @endif
     </div>
-
-    <div class="right-panel">
-      <div class="section-title">コート</div>
-
-      <div id="capture-area" class="court">
-        <div class="line"></div>
-        <div class="circle"></div>
-
-        <div class="p pos-gk" data-player-label="1">1</div>
-        <div class="p pos-2" data-player-label="2">2</div>
-        <div class="p pos-3" data-player-label="3">3</div>
-        <div class="p pos-4" data-player-label="4">4</div>
-        <div class="p pos-5" data-player-label="5">5</div>
-      </div>
-
-      <button id="export-btn" class="btn export-btn">画像保存</button>
-    </div>
-  </div>
-
-  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 </body>
 </html>

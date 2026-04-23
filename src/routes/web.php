@@ -1,11 +1,10 @@
 <?php
 
+use App\Http\Controllers\PlayController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/play', function() {
-    return view('play.index');
-});
+Route::get('/play', [PlayController::class, 'index'])->name('play.index');
