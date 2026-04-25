@@ -8,3 +8,4 @@ Route::get('/', function () {
 });
 
 Route::get('/play', [PlayController::class, 'index'])->name('play.index');
+Route::post('/play/save', [PlayController::class, 'store'])->name('play.store');
