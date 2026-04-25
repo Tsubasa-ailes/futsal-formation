@@ -8,7 +8,7 @@
 </head>
 <body class="bg-black text-white min-h-screen">
     <div class="max-w-6xl mx-auto py-8 px-4">
-        <h1 class="text-3xl font-bold mb-6 text-white">フォーメーション編集</h1>
+        <h1 class="text-3xl font-bold mb-6">フォーメーション編集</h1>
 
         <div class="bg-gray-900 shadow-lg rounded-lg p-6 mb-6 border border-gray-800">
             <form method="GET" action="{{ route('play.index') }}">
@@ -45,42 +45,42 @@
         @if ($selectedTemplate)
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 <div class="bg-gray-900 shadow-lg rounded-lg p-6 border border-gray-800">
-                    <h2 class="text-lg font-bold mb-2 text-white">選択中のテンプレート</h2>
-                    <p class="text-gray-300 mb-1">
-                        <span class="font-semibold text-gray-100">名前:</span> {{ $selectedTemplate->name }}
-                    </p>
-                    <p class="text-gray-300 mb-4">
-                        <span class="font-semibold text-gray-100">コード:</span> {{ $selectedTemplate->formation_code }}
+                    <h2 class="text-lg font-bold mb-2">選手入力</h2>
+
+                    <p class="text-gray-400 text-sm mb-4">
+                        選手名と背番号を入力すると、右のコートに反映されます。
                     </p>
 
-                    <h3 class="text-md font-bold mb-3 text-white">スロット一覧</h3>
+                    <div class="space-y-4">
+                        @foreach ($selectedTemplate->slots as $slot)
+                            <div class="bg-gray-800 rounded-lg p-4 border border-gray-700">
+                                <div class="flex items-center justify-between mb-3">
+                                    <div class="font-bold">
+                                        slot {{ $slot->slot }}
+                                    </div>
+                                    <div class="text-sm text-gray-400">
+                                        {{ $slot->role_label }}
+                                    </div>
+                                </div>
 
-                    <div class="overflow-x-auto">
-                        <table class="min-w-full border border-gray-700 text-sm text-white">
-                            <thead class="bg-gray-800">
-                                <tr>
-                                    <th class="border border-gray-700 px-4 py-2">slot</th>
-                                    <th class="border border-gray-700 px-4 py-2">role</th>
-                                    <th class="border border-gray-700 px-4 py-2">x</th>
-                                    <th class="border border-gray-700 px-4 py-2">y</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach ($selectedTemplate->slots as $slot)
-                                    <tr class="bg-gray-900">
-                                        <td class="border border-gray-700 px-4 py-2 text-center">{{ $slot->slot }}</td>
-                                        <td class="border border-gray-700 px-4 py-2 text-center">{{ $slot->role_label }}</td>
-                                        <td class="border border-gray-700 px-4 py-2 text-center">{{ $slot->default_x }}</td>
-                                        <td class="border border-gray-700 px-4 py-2 text-center">{{ $slot->default_y }}</td>
-                                    </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
+                                <div>
+                                    <label class="block text-sm text-gray-300 mb-1">
+                                        選手名
+                                    </label>
+                                    <input
+                                        type="text"
+                                        class="player-name w-full rounded px-3 py-2 bg-gray-950 border border-gray-700 text-white"
+                                        data-slot="{{ $slot->slot }}"
+                                        placeholder="例：遠藤"
+                                    >
+                                </div>
+                            </div>
+                        @endforeach                    
                     </div>
                 </div>
 
                 <div class="bg-gray-900 shadow-lg rounded-lg p-6 border border-gray-800">
-                    <h2 class="text-lg font-bold mb-4 text-white">コート表示</h2>
+                    <h2 class="text-lg font-bold mb-4">コート表示</h2>
 
                     <div style="display: flex; justify-content: center;">
                         <div
@@ -94,14 +94,7 @@
                                 overflow: hidden;
                             "
                         >
-                            <div
-                                style="
-                                    position: absolute;
-                                    inset: 0;
-                                    border: 2px solid white;
-                                    border-radius: 16px;
-                                "
-                            ></div>
+                            <div style="position: absolute; inset: 0; border: 2px solid white; border-radius: 16px;"></div>
 
                             <div
                                 style="
@@ -129,15 +122,7 @@
                                 "
                             ></div>
 
-                            <div
-                                style="
-                                    position: absolute;
-                                    left: 0;
-                                    right: 0;
-                                    top: 50%;
-                                    border-top: 2px solid white;
-                                "
-                            ></div>
+                            <div style="position: absolute; left: 0; right: 0; top: 50%; border-top: 2px solid white;"></div>
 
                             <div
                                 style="
@@ -159,34 +144,72 @@
                                         left: {{ $slot->default_x }}%;
                                         top: {{ $slot->default_y }}%;
                                         transform: translate(-50%, -50%);
-                                        width: 56px;
-                                        height: 56px;
+                                        width: 62px;
+                                        height: 62px;
                                         background: #2563eb;
                                         color: white;
                                         border-radius: 9999px;
                                         display: flex;
-                                        flex-direction: column;
                                         align-items: center;
                                         justify-content: center;
                                         font-weight: bold;
                                         box-shadow: 0 4px 10px rgba(0,0,0,0.35);
-                                        font-size: 12px;
                                         border: 2px solid rgba(255,255,255,0.25);
+                                        font-size: 10px;
                                     "
                                 >
-                                    <div style="font-size: 10px; line-height: 1;">{{ $slot->role_label }}</div>
-                                    <div style="font-size: 12px; line-height: 1; margin-top: 4px;">{{ $slot->slot }}</div>
+                                    <div
+                                        id="court-name-{{ $slot->slot }}"
+                                        style="
+                                            text-align: center;
+                                            max-width: 56px;
+                                            overflow: hidden;
+                                            white-space: nowrap;
+                                            text-overflow: ellipsis;
+                                        "
+                                    >
+                                        {{ $slot->role_label }}
+                                    </div>
                                 </div>
                             @endforeach
                         </div>
                     </div>
 
                     <p class="text-sm text-gray-400 mt-4 text-center">
-                        いまはテンプレ座標を表示しています
+                        入力内容はまだ保存されません
                     </p>
                 </div>
             </div>
         @endif
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const nameInputs = document.querySelectorAll('.player-name');
+            const numberInputs = document.querySelectorAll('.player-number');
+
+            nameInputs.forEach((input) => {
+                input.addEventListener('input', () => {
+                    const slot = input.dataset.slot;
+                    const target = document.getElementById(`court-name-${slot}`);
+
+                    if (target) {
+                        target.textContent = input.value || input.placeholder.replace('例：', '');
+                    }
+                });
+            });
+
+            numberInputs.forEach((input) => {
+                input.addEventListener('input', () => {
+                    const slot = input.dataset.slot;
+                    const target = document.getElementById(`court-number-${slot}`);
+
+                    if (target) {
+                        target.textContent = input.value || slot;
+                    }
+                });
+            });
+        });
+    </script>
 </body>
 </html>
