@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Lineup;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+
 
 class LineupController extends Controller
 {
@@ -23,5 +25,42 @@ class LineupController extends Controller
         }]);
 
         return view('lineups.show', compact('lineup'));
+    }
+
+    public function edit(Lineup $lineup)
+    {
+        $lineup->load(['players' => function ($query) {
+            $query->orderBy('slot');
+        }]);
+
+        return view('lineups.edit', compact('lineup'));
+    }
+
+    public function update(Request $request, Lineup $lineup)
+    {
+        $validated = $request->validate([
+            'title' => ['nullable', 'string', 'max:20'],
+            'players' => ['required', 'array'],
+            'players.*.id' => ['required', 'exists:lineup_players,id'],
+            'players.*.display_name' => ['required', 'string', 'max:20'],
+        ]);
+
+        DB::transaction(function () use ($validated, $lineup) {
+            $lineup->update([
+                'title' => $validated['title'] ?? '無題',
+            ]);
+
+            foreach ($validated['players'] as $playerData) {
+                $lineup->players()
+                    ->where('id', $playerData['id'])
+                    ->update([
+                        'display_name' => $playerData['display_name'],
+                    ]);
+            }
+        });
+
+        return redirect()
+            ->route('lineups.show', $lineup)
+            ->with('success', 'フォーメーションを更新しました。');
     }
 }

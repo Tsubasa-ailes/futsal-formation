@@ -17,13 +17,21 @@
                     フォーメーション: {{ $lineup->formation_code }}
                 </p>
             </div>
+            <div>
+                <a
+                    href="{{ route('lineups.edit', $lineup) }}"
+                    class="bg-gray-700 hover:bg-gray-600 text-white px-4 py-2 rounded"
+                >
+                    編集
+                </a>
 
-            <a
-                href="{{ route('lineups.index') }}"
-                class="bg-gray-700 hover:bg-gray-600 text-white px-4 py-2 rounded"
-            >
-                一覧へ戻る
-            </a>
+                <a
+                    href="{{ route('lineups.index') }}"
+                    class="bg-gray-700 hover:bg-gray-600 text-white px-4 py-2 rounded"
+                >
+                    一覧へ戻る
+                </a>
+            </div>
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -63,7 +71,7 @@
             <div class="bg-gray-900 border border-gray-800 rounded-lg p-6">
                 <h2 class="text-lg font-bold mb-4">コート表示</h2>
 
-                <div style="display: flex; justify-content: center;">
+                <div id="export-area" style="display: flex; justify-content: center;">
                     <div style="
                         position: relative;
                         width: 300px;
@@ -141,8 +149,47 @@
                 <p class="text-sm text-gray-400 mt-4 text-center">
                     保存済みフォーメーションを表示しています
                 </p>
+
+                <div class="mt-6 text-center">
+                    <button
+                        type="button"
+                        id="download-image"
+                        class="bg-blue-600 hover:bg-blue-700 text-white font-bold px-6 py-3 rounded"
+                    >
+                        画像出力
+                    </button>
+                </div>            
             </div>
         </div>
     </div>
+    <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>    
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const button = document.getElementById('download-image');
+        const exportArea = document.getElementById('export-area');
+
+        if (!button || !exportArea) {
+            return;
+        }
+
+        button.addEventListener('click', async () => {
+            const confirmed = confirm('フォーメーション画像を出力しますか？');
+
+            if(!confirmed) {
+                return;
+            }
+            
+            const canvas = await html2canvas(exportArea, {
+                backgroundColor: '#111111',
+                scale: 2,
+            });
+
+            const link = document.createElement('a');
+            link.download = 'formation-{{ $lineup->id }}.png';
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+        });
+    });
+    </script>
 </body>
 </html>

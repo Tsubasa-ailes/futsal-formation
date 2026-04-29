@@ -51,12 +51,20 @@
                                     {{ $lineup->created_at->format('Y/m/d H:i') }}
                                 </td>
                                 <td class="px-4 py-3">
-                                    <a
-                                        href="{{ route('lineups.show', $lineup) }}"
-                                        class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded text-xs"
-                                    >
-                                        詳細
-                                    </a>
+                                    <div class="flex gap-2">
+                                        <a
+                                            href="{{ route('lineups.show', $lineup) }}"
+                                            class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded text-xs"
+                                        >
+                                            詳細
+                                        </a>
+                                        <a
+                                            href="{{ route('lineups.edit', $lineup) }}"
+                                            class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded text-xs"
+                                        >
+                                            編集
+                                        </a>
+                                    </div>
                                 </td>
                             </tr>
                         @endforeach
