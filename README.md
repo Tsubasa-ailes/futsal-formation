@@ -50,7 +50,7 @@
 
 
 
-![app](images/futsal-formation_index.png)
+<!-- ![app](images/futsal-formation_index.png) -->
 
 
 ---

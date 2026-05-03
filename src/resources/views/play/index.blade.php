@@ -8,9 +8,15 @@
 </head>
 <body class="bg-black text-white min-h-screen">
 <div class="max-w-6xl mx-auto py-8 px-4">
-
-    <h1 class="text-3xl font-bold mb-6">フォーメーション編集</h1>
-
+    <div class="flex items-center justify-between mb-6">
+        <h1 class="text-3xl font-bold mb-6">フォーメーション編集</h1>
+        <a
+            href="{{ route('lineups.index') }}"
+            class="bg-gray-700 hover:bg-gray-600 text-white px-4 py-2 rounded"
+        >
+            保存一覧
+        </a>
+    </div>
     {{-- フォーメーション選択 --}}
     <div class="bg-gray-900 p-6 rounded mb-6">
         <form method="GET" action="{{ route('play.index') }}">
