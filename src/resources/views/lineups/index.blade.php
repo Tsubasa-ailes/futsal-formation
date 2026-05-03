@@ -64,6 +64,21 @@
                                         >
                                             編集
                                         </a>
+                                        <form
+                                            method="POST"
+                                            action="{{ route('lineups.destroy', $lineup) }}"
+                                            onsubmit="return confirm('「{{ e($lineup->title ?? '無題') }}」を削除しますか？');"
+                                        >
+                                            @csrf
+                                            @method('DELETE')
+
+                                            <button
+                                                type="submit"
+                                                class="bg-red-600 hover:bg-red-700 text-white px-3 py-2 rounded text-xs"
+                                            >
+                                                削除
+                                            </button>
+                                        </form>                                    
                                     </div>
                                 </td>
                             </tr>

@@ -63,4 +63,18 @@ class LineupController extends Controller
             ->route('lineups.show', $lineup)
             ->with('success', 'フォーメーションを更新しました。');
     }
+
+    public function destroy(Lineup $lineup)
+    {
+
+        DB::transaction(function () use ($lineup) {
+            $lineup->players()->delete();
+
+            $lineup->delete();
+        });
+
+        return redirect()
+            ->route('lineups.index')
+            ->with('success', 'フォーメーションを削除しました。');
+    }
 }
