@@ -77,4 +77,50 @@ class LineupController extends Controller
             ->route('lineups.index')
             ->with('success', 'フォーメーションを削除しました。');
     }
-}
+
+    public function trash()
+    {
+        $lineups = Lineup::onlyTrashed()
+            ->withCount(['players' => function ($query) {
+                $query->withTrashed();
+            }]  )
+            ->latest('deleted_at')
+            ->get();
+
+        return view('lineups.trash', compact('lineups'));
+    }
+
+    public function restore($id)
+    {
+        DB::transaction(function () use ($id) {
+
+            $lineup = Lineup::onlyTrashed()->findOrFail($id);
+
+            $lineup->restore();
+
+            $lineup->players()
+                ->onlyTrashed()
+                ->restore();
+        });
+
+        return redirect()
+            ->route('lineups.trash')
+            ->with('success', 'フォーメーションを復元しました。');
+    }
+
+    public function forceDelete($id)
+    {
+        DB::transaction(function () use ($id) {
+            $lineup = Lineup::onlyTrashed()->findOrFail($id);
+        
+            $lineup->players()
+                ->withTrashed()
+                ->forceDelete();
+        
+            $lineup->forceDelete();
+        });
+    
+        return redirect()
+            ->route('lineups.trash')
+            ->with('success', 'フォーメーションを完全削除しました。');
+}}

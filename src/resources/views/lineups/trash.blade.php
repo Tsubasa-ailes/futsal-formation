@@ -3,32 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>保存フォーメーション一覧</title>
+    <title>ゴミ箱</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body class="bg-black text-white min-h-screen">
     <div class="max-w-6xl mx-auto py-8 px-4">
         <div class="flex items-center justify-between mb-6">
-            <h1 class="text-3xl font-bold">保存フォーメーション一覧</h1>
-            <div class="flex gap-2">
-                <a
-                    href="{{ route('play.index') }}"
-                    class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded"
-                >
-                    新規作成
-                </a>
-                <a
-                    href="{{ route('lineups.trash') }}"
-                    class="bg-gray-700 hover:bg-gray-600 text-white px-4 py-2 rounded"
-                >
-                    ゴミ箱
-                </a>
-            </div>       
+            <h1 class="text-3xl font-bold">ゴミ箱</h1>
+
+            <a
+                href="{{ route('lineups.index') }}"
+                class="bg-gray-700 hover:bg-gray-600 text-white px-4 py-2 rounded"
+            >
+                一覧へ戻る
+            </a>
         </div>
+
+        @if (session('success'))
+            <div class="bg-green-600 text-white px-4 py-3 rounded mb-6">
+                {{ session('success') }}
+            </div>
+        @endif
 
         @if ($lineups->isEmpty())
             <div class="bg-gray-900 border border-gray-800 rounded-lg p-6 text-gray-300">
-                まだ保存されたフォーメーションはありません。
+                削除済みのフォーメーションはありません。
             </div>
         @else
             <div class="bg-gray-900 border border-gray-800 rounded-lg overflow-hidden">
@@ -38,7 +37,7 @@
                             <th class="px-4 py-3 text-left">タイトル</th>
                             <th class="px-4 py-3 text-left">フォーメーション</th>
                             <th class="px-4 py-3 text-left">人数</th>
-                            <th class="px-4 py-3 text-left">保存日時</th>
+                            <th class="px-4 py-3 text-left">削除日時</th>
                             <th class="px-4 py-3 text-left">操作</th>
                         </tr>
                     </thead>
@@ -55,26 +54,29 @@
                                     {{ $lineup->players_count }}人
                                 </td>
                                 <td class="px-4 py-3 text-gray-400">
-                                    {{ $lineup->created_at->format('Y/m/d H:i') }}
+                                    {{ $lineup->deleted_at?->format('Y/m/d H:i') }}
                                 </td>
                                 <td class="px-4 py-3">
                                     <div class="flex gap-2">
-                                        <a
-                                            href="{{ route('lineups.show', $lineup) }}"
-                                            class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded text-xs"
-                                        >
-                                            詳細
-                                        </a>
-                                        <a
-                                            href="{{ route('lineups.edit', $lineup) }}"
-                                            class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded text-xs"
-                                        >
-                                            編集
-                                        </a>
                                         <form
                                             method="POST"
-                                            action="{{ route('lineups.destroy', $lineup) }}"
-                                            onsubmit="return confirm('「{{ e($lineup->title ?? '無題') }}」を削除しますか？');"
+                                            action="{{ route('lineups.restore', $lineup->id) }}"
+                                            onsubmit="return confirm('「{{ e($lineup->title ?? '無題') }}」のフォーメーションを復元しますか？');"
+                                        >
+                                            @csrf
+                                            @method('PATCH')
+
+                                            <button
+                                                type="submit"
+                                                class="bg-green-600 hover:bg-green-700 text-white px-3 py-2 rounded text-xs"
+                                            >
+                                                復元
+                                            </button>
+                                        </form>
+                                        <form
+                                            method="POST"
+                                            action="{{ route('lineups.force-delete', $lineup->id) }}"
+                                            onsubmit="return confirm('「{{ e($lineup->title ?? '無題') }}」を完全削除しますか？\nこの操作は元に戻せません。');"
                                         >
                                             @csrf
                                             @method('DELETE')
@@ -83,10 +85,10 @@
                                                 type="submit"
                                                 class="bg-red-600 hover:bg-red-700 text-white px-3 py-2 rounded text-xs"
                                             >
-                                                削除
+                                                完全削除
                                             </button>
-                                        </form>                                    
-                                    </div>
+                                        </form>   
+                                    </div>                             
                                 </td>
                             </tr>
                         @endforeach

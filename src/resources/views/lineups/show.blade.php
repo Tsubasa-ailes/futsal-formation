@@ -17,7 +17,7 @@
                     フォーメーション: {{ $lineup->formation_code }}
                 </p>
             </div>
-            <div>
+            <div class="flex gap-2">
                 <a
                     href="{{ route('lineups.edit', $lineup) }}"
                     class="bg-gray-700 hover:bg-gray-600 text-white px-4 py-2 rounded"
@@ -151,28 +151,30 @@
                 </p>
 
                 <div class="mt-6 text-center">
-                    <button
-                        type="button"
-                        id="download-image"
-                        class="bg-blue-600 hover:bg-blue-700 text-white font-bold px-6 py-3 rounded"
-                    >
-                        画像出力
-                    </button>
-                    <form
-                        method="POST"
-                        action="{{ route('lineups.destroy', $lineup) }}"
-                        onsubmit="return confirm('「{{ e($lineup->title ?? '無題') }}」を削除しますか？');"
-                    >
-                        @csrf
-                        @method('DELETE')
-
+                    <div class="flex gap-2 justify-center">
                         <button
-                            type="submit"
-                            class="bg-red-600 hover:bg-red-700 text-white px-3 py-2 rounded text-xs"
+                            type="button"
+                            id="download-image"
+                            class="bg-blue-600 hover:bg-blue-700 text-white font-bold px-6 py-3 rounded"
                         >
-                            削除
+                            画像出力
                         </button>
-                    </form>                
+                        <form
+                            method="POST"
+                            action="{{ route('lineups.destroy', $lineup) }}"
+                            onsubmit="return confirm('「{{ e($lineup->title ?? '無題') }}」を削除しますか？');"
+                        >
+                            @csrf
+                            @method('DELETE')
+
+                            <button
+                                type="submit"
+                                class="bg-red-600 hover:bg-red-700 text-white font-bold px-6 py-3 rounded"
+                            >
+                                削除
+                            </button>
+                        </form> 
+                    </div>               
                 </div>            
             </div>
         </div>
