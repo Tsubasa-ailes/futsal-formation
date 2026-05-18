@@ -70,9 +70,17 @@
 
             <div class="bg-gray-900 border border-gray-800 rounded-lg p-6">
                 <h2 class="text-lg font-bold mb-4">コート表示</h2>
+                    <button
+                        type="button"
+                        id="toggle-ball"
+                        class="bg-blue-600 hover:bg-blue-700 text-white font-bold px-6 py-3 rounded"
+                    >
+                        <span id="toggle-ball-text">ボール非表示</span>
+                    </button>
 
                 <div id="export-area" style="display: flex; justify-content: center;">
-                    <div style="
+                    <div id="court" 
+                        style="
                         position: relative;
                         width: 300px;
                         height: 500px;
@@ -119,7 +127,9 @@
                         "></div>
 
                         @foreach ($lineup->players as $player)
-                            <div style="
+                            <div class="draggable-player"
+                                data-slot="{{ $player->slot }}"
+                                style="
                                 position: absolute;
                                 left: {{ $player->x }}%;
                                 top: {{ $player->y }}%;
@@ -139,10 +149,40 @@
                                 border: 2px solid rgba(255,255,255,0.25);
                                 overflow: hidden;
                                 padding: 4px;
+                                cursor: grab;
+                                user-select: none;
+                                touch-action: none;
+                                z-index: 10;
                             ">
                                 {{ $player->display_name }}
                             </div>
                         @endforeach
+                        <div
+                            id="draggable-ball"
+                            style="
+                                position: absolute;
+                                left: 50%;
+                                top: 50%;
+                                transform: translate(-50%, -50%);
+                                width: 25px;
+                                height: 25px;
+                                background: white;
+                                color: black;
+                                border-radius: 9999px;
+                                display: flex;
+                                align-items: center;
+                                justify-content: center;
+                                font-size: 25px;
+                                font-weight: bold;
+                                box-shadow: 0 3px 8px rgba(0,0,0,0.35);
+                                cursor: grab;
+                                user-select: none;
+                                touch-action: none;
+                                z-index: 25;
+                            "
+                        >
+                            ⚽
+                        </div>
                     </div>
                 </div>
 
@@ -205,6 +245,81 @@
             link.download = 'formation-{{ $lineup->id }}.png';
             link.href = canvas.toDataURL('image/png');
             link.click();
+        });
+
+        const toggleBallButton = document.getElementById('toggle-ball');
+        const toggleBallText = document.getElementById('toggle-ball-text');
+        const ball = document.getElementById('draggable-ball');
+
+        if (toggleBallButton && toggleBallText && ball) {
+            let isBallVisible = true;
+
+            toggleBallButton.addEventListener('click', () => {
+                if (isBallVisible) {
+                    ball.style.display = 'none';
+                    toggleBallText.textContent = 'ボール表示';
+
+                    toggleBallButton.classList.remove('bg-blue-600', 'hover:bg-blue-700');
+                    toggleBallButton.classList.add('bg-blue-600', 'hover:bg-gray-700');
+
+                    isBallVisible = false;
+                } else {
+                    ball.style.display = 'flex';
+                    toggleBallText.textContent = 'ボール非表示';
+
+                    toggleBallButton.classList.remove('bg-blue-600', 'hover:bg-gray-700');
+                    toggleBallButton.classList.add('bg-blue-600', 'hover:bg-blue-700');
+
+                    isBallVisible = true;
+                }
+            });
+        }
+    });
+    document.addEventListener('DOMContentLoaded', () => {
+        const court = document.getElementById('court');
+        let activeItem = null;
+
+        if (!court) {
+            return;
+        }
+
+        document.querySelectorAll('.draggable-player, #draggable-ball').forEach((item) => {
+            item.addEventListener('pointerdown', (e) => {
+                activeItem = item;
+                activeItem.style.cursor = 'grabbing';
+                activeItem.style.zIndex = 50;
+                e.preventDefault();
+            });
+        });
+
+        document.addEventListener('pointermove', (e) => {
+            if (!activeItem) {
+                return;
+            }
+
+            const rect = court.getBoundingClientRect();
+
+            let x = e.clientX - rect.left;
+            let y = e.clientY - rect.top;
+
+            x = Math.max(0, Math.min(x, rect.width));
+            y = Math.max(0, Math.min(y, rect.height));
+
+            const xPercent = (x / rect.width) * 100;
+            const yPercent = (y / rect.height) * 100;
+
+            activeItem.style.left = xPercent.toFixed(2) + '%';
+            activeItem.style.top = yPercent.toFixed(2) + '%';
+        });
+
+        document.addEventListener('pointerup', () => {
+            if (!activeItem) {
+                return;
+            }
+
+            activeItem.style.cursor = 'grab';
+            activeItem.style.zIndex = activeItem.id === 'draggable-ball' ? 25 : 10;
+            activeItem = null;
         });
     });
     </script>
