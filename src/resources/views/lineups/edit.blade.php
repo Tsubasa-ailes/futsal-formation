@@ -15,13 +15,20 @@
                     フォーメーション: {{ $lineup->formation_code }}
                 </p>
             </div>
-
-            <a
-                href="{{ route('lineups.show', $lineup) }}"
-                class="bg-gray-700 hover:bg-gray-600 text-white px-4 py-2 rounded"
-            >
-                詳細へ戻る
-            </a>
+            <div class="flex gap-2">
+                <a
+                    href="{{ route('lineups.show', $lineup) }}"
+                    class="bg-gray-700 hover:bg-gray-600 text-white px-4 py-2 rounded"
+                >
+                    詳細
+                </a>
+                <a
+                    href="{{ route('lineups.index') }}"
+                    class="bg-gray-700 hover:bg-gray-600 text-white px-4 py-2 rounded"
+                >
+                    一覧へ戻る
+                </a>
+            </div>
         </div>
 
         @if ($errors->any())

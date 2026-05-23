@@ -157,8 +157,10 @@
                                 {{ $player->display_name }}
                             </div>
                         @endforeach
-                        <div
+                        <img
                             id="draggable-ball"
+                            src="{{ asset('images/ball.png') }}"
+                            alt="ball"
                             style="
                                 position: absolute;
                                 left: 50%;
@@ -166,23 +168,14 @@
                                 transform: translate(-50%, -50%);
                                 width: 25px;
                                 height: 25px;
-                                background: white;
-                                color: black;
-                                border-radius: 9999px;
-                                display: flex;
-                                align-items: center;
-                                justify-content: center;
-                                font-size: 25px;
-                                font-weight: bold;
-                                box-shadow: 0 3px 8px rgba(0,0,0,0.35);
+                                border-radius: 50%;
                                 cursor: grab;
                                 user-select: none;
                                 touch-action: none;
                                 z-index: 25;
+
                             "
                         >
-                            ⚽
-                        </div>
                     </div>
                 </div>
 
