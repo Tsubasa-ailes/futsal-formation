@@ -26,3 +26,4 @@ node_modules
 vendor
 .env
 docker/mysql/data
+.DS_Store
