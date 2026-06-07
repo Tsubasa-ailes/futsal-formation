@@ -63,6 +63,15 @@
                     maxlength="20"
                 >
             </div>
+            {{-- メモ --}}
+            <div class="mb-6">
+                <textarea
+                    name="note"
+                    rows="4"
+                    placeholder="メモ・戦術意図・注意点など"
+                    class="w-full bg-gray-800 p-2 rounded"
+                >{{ old('note', $lineup->note) }}</textarea>
+            </div>
 
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 <div class="bg-gray-900 border border-gray-800 rounded-lg p-6">

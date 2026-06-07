@@ -6,6 +6,8 @@ use App\Models\FormationTemplate;
 use App\Models\Lineup;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
+
 
 class PlayController extends Controller
 {
@@ -29,6 +31,7 @@ class PlayController extends Controller
         $validated = $request->validate([
             'formation_template_id' => ['required', 'exists:formation_templates,id'],
             'title' => ['nullable', 'string', 'max:20'],
+            'note' => ['nullable', 'string', 'max:1000'],
             'players' => ['required', 'array'],
             'players.*.slot' => ['required', 'integer'],
             'players.*.display_name' => ['required', 'string', 'max:20'],
@@ -40,9 +43,10 @@ class PlayController extends Controller
             $template = FormationTemplate::findOrFail($validated['formation_template_id']);
 
             $lineup = Lineup::create([
+                'user_id' => Auth::id(),
                 'title' => $validated['title'] ?? '無題のフォーメーション',
                 'formation_code' => $template->formation_code,
-                'note' => null,
+                'note' => $validated['note'] ?? null,
             ]);
 
             foreach ($validated['players'] as $player) {

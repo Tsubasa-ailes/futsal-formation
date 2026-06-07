@@ -12,6 +12,7 @@ class Lineup extends Model
     use SoftDeletes;
     
     protected $fillable = [
+        'user_id',
         'title',
         'formation_code',
         'note',

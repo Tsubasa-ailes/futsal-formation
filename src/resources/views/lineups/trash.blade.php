@@ -10,6 +10,9 @@
     <div class="max-w-6xl mx-auto py-8 px-4">
         <div class="flex items-center justify-between mb-6">
             <h1 class="text-3xl font-bold">ゴミ箱</h1>
+            @if(Auth::check())
+                <p>ログイン中ユーザー：{{ Auth::user()->name }}</p>
+            @endif
 
             <a
                 href="{{ route('lineups.index') }}"

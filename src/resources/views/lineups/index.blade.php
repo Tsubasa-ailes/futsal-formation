@@ -10,6 +10,9 @@
     <div class="max-w-6xl mx-auto py-8 px-4">
         <div class="flex items-center justify-between mb-6">
             <h1 class="text-3xl font-bold">保存フォーメーション一覧</h1>
+            @if(Auth::check())
+                <p>ログイン中ユーザー：{{ Auth::user()->name }}</p>
+            @endif
             <div class="flex gap-2">
                 <a
                     href="{{ route('play.index') }}"

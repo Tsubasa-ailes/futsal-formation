@@ -10,6 +10,9 @@
 <div class="max-w-6xl mx-auto py-8 px-4">
     <div class="flex items-center justify-between mb-6">
         <h1 class="text-3xl font-bold mb-6">フォーメーション編集</h1>
+        @if(Auth::check())
+            <p>ログイン中ユーザー：{{ Auth::user()->name }}</p>
+        @endif
         <a
             href="{{ route('lineups.index') }}"
             class="bg-gray-700 hover:bg-gray-600 text-white px-4 py-2 rounded"
@@ -53,6 +56,15 @@
                     placeholder="タイトル"
                     class="w-full bg-gray-800 p-2 rounded">
             </div>
+            {{-- メモ --}}
+            <div class="mb-6">
+                <textarea
+                    name="note"
+                    rows="4"
+                    placeholder="メモ・戦術意図・注意点など"
+                    class="w-full bg-gray-800 p-2 rounded"
+                ></textarea>
+            </div>
 
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
 
@@ -91,7 +103,48 @@
                         border: 4px solid white;
                         border-radius: 16px;
                     ">
+                        {{-- 内側ライン --}}
+                        <div style="position: absolute; inset: 0; border: 2px solid white; border-radius: 16px;"></div>
 
+                        {{-- 上ゴールエリア --}}
+                        <div style="
+                            position: absolute;
+                            left: 50%;
+                            top: 0;
+                            transform: translateX(-50%);
+                            width: 96px;
+                            height: 40px;
+                            border: 2px solid white;
+                            border-top: 0;
+                        "></div>
+
+                        {{-- 下ゴールエリア --}}
+                        <div style="
+                            position: absolute;
+                            left: 50%;
+                            bottom: 0;
+                            transform: translateX(-50%);
+                            width: 96px;
+                            height: 40px;
+                            border: 2px solid white;
+                            border-bottom: 0;
+                        "></div>
+
+                        {{-- ハーフライン --}}
+                        <div style="position: absolute; left: 0; right: 0; top: 50%; border-top: 2px solid white;"></div>
+
+                        {{-- センターサークル --}}
+                        <div style="
+                            position: absolute;
+                            left: 50%;
+                            top: 50%;
+                            transform: translate(-50%, -50%);
+                            width: 80px;
+                            height: 80px;
+                            border: 2px solid white;
+                            border-radius: 9999px;
+                        "></div>
+                        
                         @foreach ($selectedTemplate->slots as $slot)
                             <div style="
                                 position:absolute;

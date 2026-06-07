@@ -43,8 +43,6 @@
                         <tr>
                             <th class="border border-gray-700 px-4 py-2">slot</th>
                             <th class="border border-gray-700 px-4 py-2">選手名</th>
-                            <th class="border border-gray-700 px-4 py-2">x</th>
-                            <th class="border border-gray-700 px-4 py-2">y</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -56,16 +54,19 @@
                                 <td class="border border-gray-700 px-4 py-2 text-center font-semibold">
                                     {{ $player->display_name }}
                                 </td>
-                                <td class="border border-gray-700 px-4 py-2 text-center">
-                                    {{ $player->x }}
-                                </td>
-                                <td class="border border-gray-700 px-4 py-2 text-center">
-                                    {{ $player->y }}
-                                </td>
                             </tr>
                         @endforeach
                     </tbody>
                 </table>
+                @if($lineup->note)
+                    <div class="mt-6">
+                        <h3 class="text-lg font-bold mb-2">メモ</h3>
+
+                        <div class="bg-gray-800 rounded p-4 whitespace-pre-wrap">
+                            {{ $lineup->note }}
+                        </div>
+                    </div>
+                @endif
             </div>
 
             <div class="bg-gray-900 border border-gray-800 rounded-lg p-6">
