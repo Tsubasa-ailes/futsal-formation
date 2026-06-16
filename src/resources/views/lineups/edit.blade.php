@@ -1,12 +1,7 @@
-<!DOCTYPE html>
-<html lang="ja">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ $lineup->title }} | フォーメーション編集</title>
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
-</head>
-<body class="bg-black text-white min-h-screen">
+@extends('layouts.app')
+
+@section('content')
+<div class="bg-black text-white min-h-screen">
     <div class="max-w-6xl mx-auto py-8 px-4">
         <div class="flex items-center justify-between mb-6">
             <div>
@@ -83,9 +78,6 @@
                                 <div class="flex items-center justify-between mb-3">
                                     <div class="font-bold">
                                         slot {{ $player->slot }}
-                                    </div>
-                                    <div class="text-sm text-gray-400">
-                                        x: {{ $player->x }} / y: {{ $player->y }}
                                     </div>
                                 </div>
 
@@ -316,5 +308,5 @@
         });
     });
     </script>
-</body>
-</html>
+</div>
+@endsection

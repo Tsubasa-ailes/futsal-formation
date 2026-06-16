@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Lineup;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 
@@ -11,7 +12,7 @@ class LineupController extends Controller
 {
     public function index()
     {
-        $lineups = Lineup::withCount('players')
+        $lineups = Lineup::where('user_id', Auth::id())
             ->latest()
             ->get();
 
@@ -20,6 +21,10 @@ class LineupController extends Controller
 
     public function show(Lineup $lineup)
     {
+        if ($lineup->user_id !== Auth::id()) {
+            abort(403);
+        }
+
         $lineup->load(['players' => function($query) {
             $query->orderBy('slot');
         }]);
@@ -29,6 +34,10 @@ class LineupController extends Controller
 
     public function edit(Lineup $lineup)
     {
+        if ($lineup->user_id !== Auth::id()) {
+            abort(403);
+        }
+
         $lineup->load(['players' => function ($query) {
             $query->orderBy('slot');
         }]);
@@ -66,7 +75,10 @@ class LineupController extends Controller
 
     public function destroy(Lineup $lineup)
     {
-
+        if ($lineup->user_id !== Auth::id()) {
+            abort(403);
+        }
+        
         DB::transaction(function () use ($lineup) {
             $lineup->players()->delete();
 
