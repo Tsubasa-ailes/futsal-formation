@@ -14,8 +14,8 @@ return new class extends Migration
         Schema::table('users', function (Blueprint $table) {
             $table->string('login_id')->unique()->after('id');
             $table->dropColumn([
-            'email',
-            'email_verified_at',
+                'email',
+                'email_verified_at',
             ]);
         });
     }

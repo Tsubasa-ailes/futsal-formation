@@ -5,9 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\FormationTemplate;
 use App\Models\Lineup;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
-
+use Illuminate\Support\Facades\DB;
 
 class PlayController extends Controller
 {
@@ -38,7 +37,7 @@ class PlayController extends Controller
             'players.*.x' => ['required', 'numeric'],
             'players.*.y' => ['required', 'numeric'],
         ]);
-        
+
         DB::transaction(function () use ($validated) {
             $template = FormationTemplate::findOrFail($validated['formation_template_id']);
 

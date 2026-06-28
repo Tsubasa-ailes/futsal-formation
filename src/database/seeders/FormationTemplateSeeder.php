@@ -4,7 +4,6 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Schema;
 
 class FormationTemplateSeeder extends Seeder
 {
@@ -16,40 +15,40 @@ class FormationTemplateSeeder extends Seeder
             DB::table('formation_templates')->delete();
 
             // PostgreSQLでIDを1から振り直したい場合
-            DB::statement("TRUNCATE TABLE formation_slots, formation_templates RESTART IDENTITY CASCADE");
+            DB::statement('TRUNCATE TABLE formation_slots, formation_templates RESTART IDENTITY CASCADE');
 
             $templates = [
                 [
                     'formation_code' => '2-2',
                     'name' => '2-2',
                     'slots' => [
-                        ['slot' => 1, 'default_x' => 50.00, 'default_y' => 85.00, 'role_label' => 'GK'],
-                        ['slot' => 2, 'default_x' => 30.00, 'default_y' => 55.00, 'role_label' => 'DF'],
-                        ['slot' => 3, 'default_x' => 70.00, 'default_y' => 55.00, 'role_label' => 'DF'],
-                        ['slot' => 4, 'default_x' => 35.00, 'default_y' => 25.00, 'role_label' => 'FW'],
-                        ['slot' => 5, 'default_x' => 65.00, 'default_y' => 25.00, 'role_label' => 'FW'],
+                        ['slot' => 1, 'default_x' => 50.00, 'default_y' => 85.00, 'role_label' => 'G'],
+                        ['slot' => 2, 'default_x' => 30.00, 'default_y' => 55.00, 'role_label' => 'F'],
+                        ['slot' => 3, 'default_x' => 70.00, 'default_y' => 55.00, 'role_label' => 'F'],
+                        ['slot' => 4, 'default_x' => 35.00, 'default_y' => 25.00, 'role_label' => 'P'],
+                        ['slot' => 5, 'default_x' => 65.00, 'default_y' => 25.00, 'role_label' => 'P'],
                     ],
                 ],
                 [
                     'formation_code' => '1-2-1',
                     'name' => '1-2-1',
                     'slots' => [
-                        ['slot' => 1, 'default_x' => 50.00, 'default_y' => 85.00, 'role_label' => 'GK'],
-                        ['slot' => 2, 'default_x' => 50.00, 'default_y' => 58.00, 'role_label' => 'DF'],
-                        ['slot' => 3, 'default_x' => 30.00, 'default_y' => 38.00, 'role_label' => 'MF'],
-                        ['slot' => 4, 'default_x' => 70.00, 'default_y' => 38.00, 'role_label' => 'MF'],
-                        ['slot' => 5, 'default_x' => 50.00, 'default_y' => 18.00, 'role_label' => 'FW'],
+                        ['slot' => 1, 'default_x' => 50.00, 'default_y' => 85.00, 'role_label' => 'G'],
+                        ['slot' => 2, 'default_x' => 50.00, 'default_y' => 58.00, 'role_label' => 'F'],
+                        ['slot' => 3, 'default_x' => 30.00, 'default_y' => 38.00, 'role_label' => 'A'],
+                        ['slot' => 4, 'default_x' => 70.00, 'default_y' => 38.00, 'role_label' => 'A'],
+                        ['slot' => 5, 'default_x' => 50.00, 'default_y' => 18.00, 'role_label' => 'P'],
                     ],
                 ],
                 [
                     'formation_code' => '3-1',
                     'name' => '3-1',
                     'slots' => [
-                        ['slot' => 1, 'default_x' => 50.00, 'default_y' => 85.00, 'role_label' => 'GK'],
-                        ['slot' => 2, 'default_x' => 25.00, 'default_y' => 52.00, 'role_label' => 'DF'],
-                        ['slot' => 3, 'default_x' => 50.00, 'default_y' => 58.00, 'role_label' => 'DF'],
-                        ['slot' => 4, 'default_x' => 75.00, 'default_y' => 52.00, 'role_label' => 'DF'],
-                        ['slot' => 5, 'default_x' => 50.00, 'default_y' => 20.00, 'role_label' => 'FW'],
+                        ['slot' => 1, 'default_x' => 50.00, 'default_y' => 85.00, 'role_label' => 'G'],
+                        ['slot' => 2, 'default_x' => 25.00, 'default_y' => 52.00, 'role_label' => 'F'],
+                        ['slot' => 3, 'default_x' => 50.00, 'default_y' => 58.00, 'role_label' => 'F'],
+                        ['slot' => 4, 'default_x' => 75.00, 'default_y' => 52.00, 'role_label' => 'F'],
+                        ['slot' => 5, 'default_x' => 50.00, 'default_y' => 20.00, 'role_label' => 'P'],
                     ],
                 ],
             ];

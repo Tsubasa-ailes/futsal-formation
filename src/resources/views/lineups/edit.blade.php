@@ -1,128 +1,109 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="bg-black text-white min-h-screen">
-    <div class="max-w-6xl mx-auto py-8 px-4">
-        <div class="flex items-center justify-between mb-6">
-            <div>
-                <h1 class="text-3xl font-bold">フォーメーション編集</h1>
-                <p class="text-gray-400 mt-2">
-                    フォーメーション: {{ $lineup->formation_code }}
-                </p>
-            </div>
-            <div class="flex gap-2">
-                <a
-                    href="{{ route('lineups.show', $lineup) }}"
-                    class="bg-gray-700 hover:bg-gray-600 text-white px-4 py-2 rounded"
-                >
-                    詳細
-                </a>
-                <a
-                    href="{{ route('lineups.index') }}"
-                    class="bg-gray-700 hover:bg-gray-600 text-white px-4 py-2 rounded"
-                >
-                    一覧へ戻る
-                </a>
-            </div>
-        </div>
-
-        @if ($errors->any())
-            <div class="bg-red-600 text-white px-4 py-3 rounded mb-6">
-                <ul class="list-disc pl-5">
-                    @foreach ($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-            </div>
-        @endif
-
-        <form
-            method="POST"
-            action="{{ route('lineups.update', $lineup) }}"
-            onsubmit="return confirm('この内容で更新しますか？');"
-        >
-            @csrf
-            @method('PUT')
-
-            <div class="bg-gray-900 border border-gray-800 rounded-lg p-6 mb-6">
-                <label class="block text-sm font-medium text-gray-300 mb-2">
-                    タイトル
-                </label>
-
-                <input
-                    type="text"
-                    name="title"
-                    value="{{ old('title', $lineup->title) }}"
-                    class="w-full rounded px-3 py-2 bg-gray-950 border border-gray-700 text-white"
-                    placeholder="例：4月練習試合 1本目"
-                    maxlength="20"
-                >
-            </div>
-            {{-- メモ --}}
-            <div class="mb-6">
-                <textarea
-                    name="note"
-                    rows="4"
-                    placeholder="メモ・戦術意図・注意点など"
-                    class="w-full bg-gray-800 p-2 rounded"
-                >{{ old('note', $lineup->note) }}</textarea>
+    <div class="px-4 py-8 text-white">
+        <div class="max-w-6xl mx-auto py-8 px-4">
+            <div class="flex items-center justify-between mb-6">
+                <div>
+                    <h1 class="text-3xl font-bold">フォーメーション編集</h1>
+                    <p class="text-gray-400 mt-2">
+                        フォーメーション: {{ $lineup->formation_code }}
+                    </p>
+                </div>
+                <div class="flex gap-2">
+                    <a href="{{ route('lineups.show', $lineup) }}"
+                        class="bg-gray-700 hover:bg-gray-600 text-white px-4 py-2 rounded">
+                        詳細
+                    </a>
+                    <a href="{{ route('lineups.index') }}" class="bg-gray-700 hover:bg-gray-600 text-white px-4 py-2 rounded">
+                        一覧へ戻る
+                    </a>
+                </div>
             </div>
 
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <div class="bg-gray-900 border border-gray-800 rounded-lg p-6">
-                    <h2 class="text-lg font-bold mb-4">選手名編集</h2>
-
-                    <div class="space-y-4">
-                        @foreach ($lineup->players as $player)
-                            <div class="bg-gray-800 rounded-lg p-4 border border-gray-700">
-                                <div class="flex items-center justify-between mb-3">
-                                    <div class="font-bold">
-                                        slot {{ $player->slot }}
-                                    </div>
-                                </div>
-
-                                <input
-                                    type="hidden"
-                                    name="players[{{ $player->slot }}][id]"
-                                    value="{{ $player->id }}"
-                                >
-
-                                <input
-                                    type="hidden"
-                                    name="players[{{ $player->slot }}][x]"
-                                    value="{{ old('players.'.$player->slot.'.x', $player->x) }}"
-                                >
-
-                                <input
-                                    type="hidden"
-                                    name="players[{{ $player->slot }}][y]"
-                                    value="{{ old('players.'.$player->slot.'.y', $player->y) }}"
-                                >
-
-                                <label class="block text-sm text-gray-300 mb-1">
-                                    選手名
-                                </label>
-
-                                <input
-                                    type="text"
-                                    name="players[{{ $player->slot }}][display_name]"
-                                    value="{{ old('players.' . $player->slot . '.display_name', $player->display_name) }}"
-                                    class="player-name w-full rounded px-3 py-2 bg-gray-950 border border-gray-700 text-white"
-                                    data-slot="{{ $player->slot }}"
-                                    maxlength="20"
-                                    required
-                                >
-                            </div>
+            @if ($errors->any())
+                <div class="bg-red-600 text-white px-4 py-3 rounded mb-6">
+                    <ul class="list-disc pl-5">
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
                         @endforeach
-                    </div>
+                    </ul>
+                </div>
+            @endif
+
+            <form method="POST" action="{{ route('lineups.update', $lineup) }}" onsubmit="return confirm('この内容で更新しますか？');">
+                @csrf
+                @method('PUT')
+
+                <div class="bg-gray-900 border border-gray-800 rounded-lg p-6 mb-6">
+                    <label class="block text-sm font-medium text-gray-300 mb-2">
+                        タイトル
+                    </label>
+
+                    <input type="text" name="title" value="{{ old('title', $lineup->title) }}"
+                        class="w-full rounded px-3 py-2 bg-gray-950 border border-gray-700 text-white"
+                        placeholder="例：4月練習試合 1本目" maxlength="20">
+                </div>
+                {{-- メモ --}}
+                <div class="mb-6">
+                    <textarea name="note" rows="4" placeholder="メモ・戦術意図・注意点など" class="w-full bg-gray-800 p-2 rounded">{{ old('note', $lineup->note) }}</textarea>
                 </div>
 
-                <div class="bg-gray-900 border border-gray-800 rounded-lg p-6">
-                    <h2 class="text-lg font-bold mb-4">コート表示</h2>
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <div class="bg-gray-900 border border-gray-800 rounded-lg p-6">
+                        <h2 class="text-lg font-bold mb-4">選手名編集</h2>
+                        @php
+                            $roleLabels = [
+                                'G' => 'ゴレイロ',
+                                'F' => 'フィクソ',
+                                'A' => 'アラ',
+                                'P' => 'ピヴォ',
+                            ];
+                        @endphp
 
-                    <div style="display: flex; justify-content: center;">
-                        <div id = "court"
-                            style="
+
+                        <div class="space-y-4">
+                            @foreach ($lineup->players as $player)
+                                @php
+                                    $slotInfo = $selectedTemplate->slots->firstWhere('slot', $player->slot);
+                                    $roleCode = $slotInfo?->role_label;
+                                    $roleName = $roleLabels[$roleCode] ?? ($roleCode ?? '');
+                                @endphp
+                                <div class="bg-gray-800 rounded-lg p-4 border border-gray-700">
+                                    <div class="flex items-center justify-between mb-3">
+                                        <div class="font-bold">
+                                            slot {{ $player->slot }}（{{ $roleName }}）
+                                        </div>
+                                    </div>
+
+                                    <input type="hidden" name="players[{{ $player->slot }}][id]"
+                                        value="{{ $player->id }}">
+
+                                    <input type="hidden" name="players[{{ $player->slot }}][x]"
+                                        value="{{ old('players.' . $player->slot . '.x', $player->x) }}">
+
+                                    <input type="hidden" name="players[{{ $player->slot }}][y]"
+                                        value="{{ old('players.' . $player->slot . '.y', $player->y) }}">
+
+                                    <label class="block text-sm text-gray-300 mb-1">
+                                        選手名
+                                    </label>
+
+                                    <input type="text" name="players[{{ $player->slot }}][display_name]"
+                                        value="{{ old('players.' . $player->slot . '.display_name', $player->display_name) }}"
+                                        class="player-name w-full rounded px-3 py-2 bg-gray-950 border border-gray-700 text-white"
+                                        data-slot="{{ $player->slot }}" maxlength="20" required>
+                                </div>
+                            @endforeach
+                        </div>
+                    </div>
+
+                    <div class="bg-gray-900 border border-gray-800 rounded-lg p-6">
+                        <h2 class="text-lg font-bold mb-4">コート表示</h2>
+
+                        <div style="display: flex; justify-content: center;">
+                            <div id = "court"
+                                style="
                                 position: relative;
                                 width: 300px;
                                 height: 500px;
@@ -130,11 +111,12 @@
                                 border: 4px solid white;
                                 border-radius: 16px;
                                 overflow: hidden;
-                            "
-                        >
-                            <div style="position: absolute; inset: 0; border: 2px solid white; border-radius: 16px;"></div>
+                            ">
+                                <div style="position: absolute; inset: 0; border: 2px solid white; border-radius: 16px;">
+                                </div>
 
-                            <div style="
+                                <div
+                                    style="
                                 position: absolute;
                                 left: 50%;
                                 top: 0;
@@ -143,9 +125,11 @@
                                 height: 40px;
                                 border: 2px solid white;
                                 border-top: 0;
-                            "></div>
+                            ">
+                                </div>
 
-                            <div style="
+                                <div
+                                    style="
                                 position: absolute;
                                 left: 50%;
                                 bottom: 0;
@@ -154,11 +138,14 @@
                                 height: 40px;
                                 border: 2px solid white;
                                 border-bottom: 0;
-                            "></div>
+                            ">
+                                </div>
 
-                            <div style="position: absolute; left: 0; right: 0; top: 50%; border-top: 2px solid white;"></div>
+                                <div style="position: absolute; left: 0; right: 0; top: 50%; border-top: 2px solid white;">
+                                </div>
 
-                            <div style="
+                                <div
+                                    style="
                                 position: absolute;
                                 left: 50%;
                                 top: 50%;
@@ -167,12 +154,12 @@
                                 height: 80px;
                                 border: 2px solid white;
                                 border-radius: 9999px;
-                            "></div>
+                            ">
+                                </div>
 
-                            @foreach ($lineup->players as $player)
-                                <div class="draggable-player"
-                                    data-slot="{{ $player->slot }}"
-                                    style="
+                                @foreach ($lineup->players as $player)
+                                    <div class="draggable-player" data-slot="{{ $player->slot }}"
+                                        style="
                                     position: absolute;
                                     left: {{ old('players.' . $player->slot . '.x', $player->x) }}%;
                                     top: {{ old('players.' . $player->slot . '.y', $player->y) }}%;
@@ -197,116 +184,111 @@
                                     touch-action: none;
                                     z-index: 10;
                                 ">
-                                    <span id="court-name-{{ $player->slot }}">
-                                        {{ old('players.' . $player->slot . '.display_name', $player->display_name) }}
-                                    </span>
-                                </div>
-                            @endforeach
+                                        <span id="court-name-{{ $player->slot }}">
+                                            {{ old('players.' . $player->slot . '.display_name', $player->display_name) }}
+                                        </span>
+                                    </div>
+                                @endforeach
+                            </div>
                         </div>
+
+                        <p class="text-sm text-gray-400 mt-4 text-center">
+                            入力内容はリアルタイムでコートに反映されます
+                        </p>
                     </div>
-
-                    <p class="text-sm text-gray-400 mt-4 text-center">
-                        入力内容はリアルタイムでコートに反映されます
-                    </p>
                 </div>
-            </div>
 
-            <div class="mt-6 flex gap-3">
-                <button
-                    type="submit"
-                    class="bg-green-600 hover:bg-green-700 text-white font-bold px-6 py-3 rounded"
-                >
-                    更新する
-                </button>
+                <div class="mt-6 flex gap-3">
+                    <button type="submit" class="bg-green-600 hover:bg-green-700 text-white font-bold px-6 py-3 rounded">
+                        更新する
+                    </button>
 
-                <a
-                    href="{{ route('lineups.index', $lineup) }}"
-                    class="bg-gray-700 hover:bg-gray-600 text-white font-bold px-6 py-3 rounded"
-                >
-                    キャンセル
-                </a>
-            </div>
-        </form>
-    </div>
+                    <a href="{{ route('lineups.index', $lineup) }}"
+                        class="bg-gray-700 hover:bg-gray-600 text-white font-bold px-6 py-3 rounded">
+                        キャンセル
+                    </a>
+                </div>
+            </form>
+        </div>
 
-    <script>
-    document.addEventListener('DOMContentLoaded', () => {
-        // 名前入力 → コート反映
-        document.querySelectorAll('.player-name').forEach((input) => {
-            input.addEventListener('input', (e) => {
-                const slot = e.target.dataset.slot;
-                const target = document.getElementById('court-name-' + slot);
-            
-                if (target) {
-                    target.textContent = e.target.value;
+        <script>
+            document.addEventListener('DOMContentLoaded', () => {
+                // 名前入力 → コート反映
+                document.querySelectorAll('.player-name').forEach((input) => {
+                    input.addEventListener('input', (e) => {
+                        const slot = e.target.dataset.slot;
+                        const target = document.getElementById('court-name-' + slot);
+
+                        if (target) {
+                            target.textContent = e.target.value;
+                        }
+                    });
+                });
+
+                const court = document.getElementById('court');
+                let activePlayer = null;
+                let activeSlot = null;
+
+                if (!court) {
+                    console.error('court が見つかりません');
+                    return;
                 }
+
+                document.querySelectorAll('.draggable-player').forEach((player) => {
+                    player.addEventListener('pointerdown', (e) => {
+                        activePlayer = player;
+                        activeSlot = player.dataset.slot;
+
+                        activePlayer.style.cursor = 'grabbing';
+                        activePlayer.style.zIndex = 30;
+
+                        e.preventDefault();
+                    });
+                });
+
+                document.addEventListener('pointermove', (e) => {
+                    if (!activePlayer || !activeSlot) {
+                        return;
+                    }
+
+                    const rect = court.getBoundingClientRect();
+
+                    let x = e.clientX - rect.left;
+                    let y = e.clientY - rect.top;
+
+                    x = Math.max(0, Math.min(x, rect.width));
+                    y = Math.max(0, Math.min(y, rect.height));
+
+                    const xPercent = (x / rect.width) * 100;
+                    const yPercent = (y / rect.height) * 100;
+
+                    activePlayer.style.left = xPercent.toFixed(2) + '%';
+                    activePlayer.style.top = yPercent.toFixed(2) + '%';
+
+                    const xInput = document.getElementById('player-x-' + activeSlot);
+                    const yInput = document.getElementById('player-y-' + activeSlot);
+
+                    if (xInput) {
+                        xInput.value = xPercent.toFixed(2);
+                    }
+
+                    if (yInput) {
+                        yInput.value = yPercent.toFixed(2);
+                    }
+                });
+
+                document.addEventListener('pointerup', () => {
+                    if (!activePlayer) {
+                        return;
+                    }
+
+                    activePlayer.style.cursor = 'grab';
+                    activePlayer.style.zIndex = 10;
+
+                    activePlayer = null;
+                    activeSlot = null;
+                });
             });
-        });
-    
-        const court = document.getElementById('court');
-        let activePlayer = null;
-        let activeSlot = null;
-    
-        if (!court) {
-            console.error('court が見つかりません');
-            return;
-        }
-    
-        document.querySelectorAll('.draggable-player').forEach((player) => {
-            player.addEventListener('pointerdown', (e) => {
-                activePlayer = player;
-                activeSlot = player.dataset.slot;
-            
-                activePlayer.style.cursor = 'grabbing';
-                activePlayer.style.zIndex = 30;
-            
-                e.preventDefault();
-            });
-        });
-    
-        document.addEventListener('pointermove', (e) => {
-            if (!activePlayer || !activeSlot) {
-                return;
-            }
-        
-            const rect = court.getBoundingClientRect();
-        
-            let x = e.clientX - rect.left;
-            let y = e.clientY - rect.top;
-        
-            x = Math.max(0, Math.min(x, rect.width));
-            y = Math.max(0, Math.min(y, rect.height));
-        
-            const xPercent = (x / rect.width) * 100;
-            const yPercent = (y / rect.height) * 100;
-        
-            activePlayer.style.left = xPercent.toFixed(2) + '%';
-            activePlayer.style.top = yPercent.toFixed(2) + '%';
-        
-            const xInput = document.getElementById('player-x-' + activeSlot);
-            const yInput = document.getElementById('player-y-' + activeSlot);
-        
-            if (xInput) {
-                xInput.value = xPercent.toFixed(2);
-            }
-        
-            if (yInput) {
-                yInput.value = yPercent.toFixed(2);
-            }
-        });
-    
-        document.addEventListener('pointerup', () => {
-            if (!activePlayer) {
-                return;
-            }
-        
-            activePlayer.style.cursor = 'grab';
-            activePlayer.style.zIndex = 10;
-        
-            activePlayer = null;
-            activeSlot = null;
-        });
-    });
-    </script>
-</div>
+        </script>
+    </div>
 @endsection

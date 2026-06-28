@@ -1,32 +1,14 @@
-<!DOCTYPE html>
-<html lang="ja">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>保存フォーメーション一覧</title>
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
-</head>
-<body class="bg-black text-white min-h-screen">
+@extends('layouts.app')
+
+@section('content')
     <div class="max-w-6xl mx-auto py-8 px-4">
         <div class="flex items-center justify-between mb-6">
             <h1 class="text-3xl font-bold">保存フォーメーション一覧</h1>
-            @if(Auth::check())
-                <p>ログイン中ユーザー：{{ Auth::user()->name }}</p>
-            @endif
             <div class="flex gap-2">
-                <a
-                    href="{{ route('play.index') }}"
-                    class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded"
-                >
-                    新規作成
-                </a>
-                <a
-                    href="{{ route('lineups.trash') }}"
-                    class="bg-gray-700 hover:bg-gray-600 text-white px-4 py-2 rounded"
-                >
+                <a href="{{ route('lineups.trash') }}" class="bg-gray-700 hover:bg-gray-600 text-white px-4 py-2 rounded">
                     ゴミ箱
                 </a>
-            </div>       
+            </div>
         </div>
 
         @if ($lineups->isEmpty())
@@ -62,33 +44,24 @@
                                 </td>
                                 <td class="px-4 py-3">
                                     <div class="flex gap-2">
-                                        <a
-                                            href="{{ route('lineups.show', $lineup) }}"
-                                            class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded text-xs"
-                                        >
+                                        <a href="{{ route('lineups.show', $lineup) }}"
+                                            class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded text-xs">
                                             詳細
                                         </a>
-                                        <a
-                                            href="{{ route('lineups.edit', $lineup) }}"
-                                            class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded text-xs"
-                                        >
+                                        <a href="{{ route('lineups.edit', $lineup) }}"
+                                            class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded text-xs">
                                             編集
                                         </a>
-                                        <form
-                                            method="POST"
-                                            action="{{ route('lineups.destroy', $lineup) }}"
-                                            onsubmit="return confirm('「{{ e($lineup->title ?? '無題') }}」を削除しますか？');"
-                                        >
+                                        <form method="POST" action="{{ route('lineups.destroy', $lineup) }}"
+                                            onsubmit="return confirm('「{{ e($lineup->title ?? '無題') }}」を削除しますか？');">
                                             @csrf
                                             @method('DELETE')
 
-                                            <button
-                                                type="submit"
-                                                class="bg-red-600 hover:bg-red-700 text-white px-3 py-2 rounded text-xs"
-                                            >
+                                            <button type="submit"
+                                                class="bg-red-600 hover:bg-red-700 text-white px-3 py-2 rounded text-xs">
                                                 削除
                                             </button>
-                                        </form>                                    
+                                        </form>
                                     </div>
                                 </td>
                             </tr>
@@ -98,5 +71,4 @@
             </div>
         @endif
     </div>
-</body>
-</html>
+@endsection

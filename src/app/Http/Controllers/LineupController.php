@@ -3,10 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Lineup;
+use App\Models\FormationTemplate;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-
 
 class LineupController extends Controller
 {
@@ -25,7 +25,7 @@ class LineupController extends Controller
             abort(403);
         }
 
-        $lineup->load(['players' => function($query) {
+        $lineup->load(['players' => function ($query) {
             $query->orderBy('slot');
         }]);
 
@@ -37,12 +37,15 @@ class LineupController extends Controller
         if ($lineup->user_id !== Auth::id()) {
             abort(403);
         }
+        $selectedTemplate = FormationTemplate::with('slots')
+            ->where('formation_code', $lineup->formation_code)
+            ->firstOrFail();
 
         $lineup->load(['players' => function ($query) {
             $query->orderBy('slot');
         }]);
 
-        return view('lineups.edit', compact('lineup'));
+        return view('lineups.edit', compact('lineup', 'selectedTemplate'));
     }
 
     public function update(Request $request, Lineup $lineup)
@@ -78,7 +81,7 @@ class LineupController extends Controller
         if ($lineup->user_id !== Auth::id()) {
             abort(403);
         }
-        
+
         DB::transaction(function () use ($lineup) {
             $lineup->players()->delete();
 
@@ -95,7 +98,7 @@ class LineupController extends Controller
         $lineups = Lineup::onlyTrashed()
             ->withCount(['players' => function ($query) {
                 $query->withTrashed();
-            }]  )
+            }])
             ->latest('deleted_at')
             ->get();
 
@@ -124,15 +127,16 @@ class LineupController extends Controller
     {
         DB::transaction(function () use ($id) {
             $lineup = Lineup::onlyTrashed()->findOrFail($id);
-        
+
             $lineup->players()
                 ->withTrashed()
                 ->forceDelete();
-        
+
             $lineup->forceDelete();
         });
-    
+
         return redirect()
             ->route('lineups.trash')
             ->with('success', 'フォーメーションを完全削除しました。');
-}}
+    }
+}
