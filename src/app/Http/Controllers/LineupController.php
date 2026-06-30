@@ -32,22 +32,40 @@ class LineupController extends Controller
         return view('lineups.show', compact('lineup'));
     }
 
-    public function edit(Lineup $lineup)
+    public function edit(Request $request, Lineup $lineup)
     {
         if ($lineup->user_id !== Auth::id()) {
             abort(403);
         }
-        $selectedTemplate = FormationTemplate::with('slots')
-            ->where('formation_code', $lineup->formation_code)
-            ->firstOrFail();
 
         $lineup->load(['players' => function ($query) {
             $query->orderBy('slot');
         }]);
 
-        return view('lineups.edit', compact('lineup', 'selectedTemplate'));
-    }
+        $formationTemplates = FormationTemplate::with('slots')
+            ->orderBy('id')
+            ->get();
 
+        $selectedFormationCode = $request->query(
+            'formation_code',
+            $lineup->formation_code
+        );
+
+        $selectedTemplate = $formationTemplates
+            ->firstWhere('formation_code', $selectedFormationCode);
+
+        if (!$selectedTemplate) {
+            $selectedTemplate = $formationTemplates
+                ->firstWhere('formation_code', $lineup->formation_code);
+        }
+
+        return view('lineups.edit', compact(
+            'lineup',
+            'formationTemplates',
+            'selectedTemplate'
+        ));
+    }
+    
     public function update(Request $request, Lineup $lineup)
     {
         $validated = $request->validate([
