@@ -98,7 +98,7 @@
 
                         <div class="bg-gray-800 p-4 mb-4 rounded">
                             <div class="mb-2 font-bold">
-                                slot {{ $slot->slot }}（{{ $roleName }}）
+                                {{ $slot->slot }}（{{ $roleName }}）
                             </div>
 
                             <input type="hidden" name="players[{{ $slot->slot }}][id]" value="{{ $player?->id }}">

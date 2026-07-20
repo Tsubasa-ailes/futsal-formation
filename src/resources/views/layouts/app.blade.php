@@ -4,7 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TACT</title>
+    <title>TACT ~フットサル戦術~</title>
+    <link rel="icon" href="{{ asset('favicon.ico') }}">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     @stack('styles')
 </head>
@@ -20,12 +21,12 @@
                 </div>
 
                 <div>
-                    <h1 class="text-2xl font-black tracking-widest text-white">
+                    <a href="{{ route('home') }}" class="text-2xl font-black tracking-widest text-white">
                         TACT
-                    </h1>
-                    <p class="text-xs tracking-[0.25em] text-blue-100">
-                        TACTICAL TOOL
-                    </p>
+                        </h1>
+                        <p class="text-xs tracking-[0.25em] text-blue-100">
+                            TACTICAL TOOL
+                        </p>
                 </div>
             </div>
 
@@ -58,8 +59,8 @@
 
                     <form method="POST" action="{{ route('logout') }}">
                         @csrf
-                        <button type="submit"
-                            class="rounded-lg border border-red-400/40 bg-red-600/90 px-4 py-2 text-sm font-bold text-white shadow-md transition hover:bg-red-500">
+                        <button type="submit" onclick="return confirm('ログアウトしますか？')"
+                            class="cursor-pointer rounded-lg border border-red-400/40 bg-red-600/90 px-4 py-2 text-sm font-bold text-white shadow-md transition hover:bg-red-500">
                             ログアウト
                         </button>
                     </form>

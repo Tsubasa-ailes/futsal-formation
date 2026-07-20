@@ -29,7 +29,11 @@ class LineupController extends Controller
             $query->orderBy('slot');
         }]);
 
-        return view('lineups.show', compact('lineup'));
+        $selectedTemplate = FormationTemplate::with('slots')
+        ->where('formation_code', $lineup->formation_code)
+        ->first();
+
+        return view('lineups.show', compact('lineup', 'selectedTemplate'));
     }
 
     public function edit(Request $request, Lineup $lineup)

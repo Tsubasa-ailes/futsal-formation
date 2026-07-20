@@ -22,7 +22,6 @@
                         <tr>
                             <th class="px-4 py-3 text-left">タイトル</th>
                             <th class="px-4 py-3 text-left">フォーメーション</th>
-                            <th class="px-4 py-3 text-left">人数</th>
                             <th class="px-4 py-3 text-left">保存日時</th>
                             <th class="px-4 py-3 text-left">操作</th>
                         </tr>
@@ -35,9 +34,6 @@
                                 </td>
                                 <td class="px-4 py-3">
                                     {{ $lineup->formation_code }}
-                                </td>
-                                <td class="px-4 py-3">
-                                    {{ $lineup->players_count }}人
                                 </td>
                                 <td class="px-4 py-3 text-gray-400">
                                     {{ $lineup->created_at->format('Y/m/d H:i') }}
@@ -58,7 +54,7 @@
                                             @method('DELETE')
 
                                             <button type="submit"
-                                                class="bg-red-600 hover:bg-red-700 text-white px-3 py-2 rounded text-xs">
+                                                class="cursor-pointer bg-red-600 hover:bg-red-700 text-white px-3 py-2 rounded text-xs">
                                                 削除
                                             </button>
                                         </form>

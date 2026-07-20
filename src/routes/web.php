@@ -6,8 +6,12 @@ use App\Http\Controllers\PlayController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    return view('welcome');
-});
+    if (Auth::check()) {
+        return redirect()->route('play.index');
+    }
+
+    return redirect()->route('login');
+})->name('home');
 
 Route::middleware('auth')->group(function () {
     // PlayController
