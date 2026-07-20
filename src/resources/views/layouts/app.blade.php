@@ -23,10 +23,11 @@
                 <div>
                     <a href="{{ route('home') }}" class="text-2xl font-black tracking-widest text-white">
                         TACT
-                        </h1>
-                        <p class="text-xs tracking-[0.25em] text-blue-100">
-                            TACTICAL TOOL
-                        </p>
+                    </a>
+                    </h1>
+                    <p class="text-xs tracking-[0.25em] text-blue-100">
+                        TACTICAL TOOL
+                    </p>
                 </div>
             </div>
 
