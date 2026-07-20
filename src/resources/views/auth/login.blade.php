@@ -1,3 +1,4 @@
+```blade
 @extends('layouts.app')
 
 @section('content')
@@ -39,7 +40,7 @@
                     </label>
 
                     <input type="text" name="login_id" id="login_id" value="{{ old('login_id') }}" required
-                        placeholder="ログインIDを入力"
+                        autocomplete="username" placeholder="ログインIDを入力"
                         class="w-full rounded-xl border border-blue-300/30 bg-blue-950/80 px-4 py-3 text-white placeholder-blue-200/50 outline-none transition focus:border-blue-300 focus:ring-2 focus:ring-blue-400/40">
 
                     @error('login_id')
@@ -54,7 +55,8 @@
                         パスワード
                     </label>
 
-                    <input type="password" name="password" id="password" required placeholder="パスワードを入力"
+                    <input type="password" name="password" id="password" required autocomplete="current-password"
+                        placeholder="パスワードを入力"
                         class="w-full rounded-xl border border-blue-300/30 bg-blue-950/80 px-4 py-3 text-white placeholder-blue-200/50 outline-none transition focus:border-blue-300 focus:ring-2 focus:ring-blue-400/40">
 
                     @error('password')
@@ -65,16 +67,26 @@
                 </div>
 
                 <button type="submit"
-                    class="w-full rounded-xl bg-gradient-to-r from-blue-500 to-blue-700 py-3 font-bold text-white shadow-lg shadow-blue-950/40 transition hover:from-blue-400 hover:to-blue-600 active:scale-[0.98]">
+                    class="w-full cursor-pointer rounded-xl bg-gradient-to-r from-blue-500 to-blue-700 py-3 font-bold text-white shadow-lg shadow-blue-950/40 transition hover:from-blue-400 hover:to-blue-600 active:scale-[0.98]">
                     ログイン →
                 </button>
             </form>
 
-            <div class="mt-8 border-t border-blue-300/20 pt-5 text-center">
+            <div class="mt-8 border-t border-blue-300/20 pt-6 text-center">
                 <p class="text-sm text-blue-100/70">
+                    アカウントをお持ちでない方
+                </p>
+
+                <a href="{{ route('register') }}"
+                    class="mt-3 inline-flex cursor-pointer items-center justify-center rounded-xl border border-blue-300/40 px-6 py-2.5 text-sm font-bold text-blue-200 transition hover:border-blue-200 hover:bg-white/10 hover:text-white active:scale-[0.98]">
+                    新規会員登録 →
+                </a>
+
+                <p class="mt-6 text-sm text-blue-100/70">
                     TACTで、あなたの戦術を可視化しよう。
                 </p>
             </div>
         </div>
     </div>
 @endsection
+```
