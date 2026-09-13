@@ -62,7 +62,7 @@
                                                 @method('PATCH')
 
                                                 <button type="submit"
-                                                    class="bg-green-600 hover:bg-green-700 text-white px-3 py-2 rounded text-xs font-bold">
+                                                    class="whitespace-nowrap bg-green-600 hover:bg-green-700 text-white px-3 py-2 rounded text-xs font-bold">
                                                     復元
                                                 </button>
                                             </form>
@@ -73,7 +73,7 @@
                                                 @method('DELETE')
 
                                                 <button type="submit"
-                                                    class="bg-red-600 hover:bg-red-700 text-white px-3 py-2 rounded text-xs font-bold">
+                                                    class="whitespace-nowrap bg-red-600 hover:bg-red-700 text-white px-3 py-2 rounded text-xs font-bold">
                                                     完全削除
                                                 </button>
                                             </form>

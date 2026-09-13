@@ -21,9 +21,7 @@ class LineupController extends Controller
 
     public function show(Lineup $lineup)
     {
-        if ($lineup->user_id !== Auth::id()) {
-            abort(403);
-        }
+        $this->authorizeOwner($lineup);
 
         $lineup->load(['players' => function ($query) {
             $query->orderBy('slot');
@@ -38,9 +36,7 @@ class LineupController extends Controller
 
     public function edit(Request $request, Lineup $lineup)
     {
-        if ($lineup->user_id !== Auth::id()) {
-            abort(403);
-        }
+        $this->authorizeOwner($lineup);
 
         $lineup->load(['players' => function ($query) {
             $query->orderBy('slot');
@@ -72,6 +68,8 @@ class LineupController extends Controller
     
     public function update(Request $request, Lineup $lineup)
     {
+        $this->authorizeOwner($lineup);
+
         $validated = $request->validate([
             'title' => ['nullable', 'string', 'max:20'],
             'players' => ['required', 'array'],
@@ -100,9 +98,7 @@ class LineupController extends Controller
 
     public function destroy(Lineup $lineup)
     {
-        if ($lineup->user_id !== Auth::id()) {
-            abort(403);
-        }
+        $this->authorizeOwner($lineup);
 
         DB::transaction(function () use ($lineup) {
             $lineup->players()->delete();
@@ -118,6 +114,7 @@ class LineupController extends Controller
     public function trash()
     {
         $lineups = Lineup::onlyTrashed()
+            ->where('user_id', Auth::id())
             ->withCount(['players' => function ($query) {
                 $query->withTrashed();
             }])
@@ -130,8 +127,9 @@ class LineupController extends Controller
     public function restore($id)
     {
         DB::transaction(function () use ($id) {
-
             $lineup = Lineup::onlyTrashed()->findOrFail($id);
+
+            $this->authorizeOwner($lineup);
 
             $lineup->restore();
 
@@ -150,6 +148,8 @@ class LineupController extends Controller
         DB::transaction(function () use ($id) {
             $lineup = Lineup::onlyTrashed()->findOrFail($id);
 
+            $this->authorizeOwner($lineup);
+
             $lineup->players()
                 ->withTrashed()
                 ->forceDelete();
@@ -160,5 +160,12 @@ class LineupController extends Controller
         return redirect()
             ->route('lineups.trash')
             ->with('success', 'フォーメーションを完全削除しました。');
+    }
+
+    private function authorizeOwner(Lineup $lineup): void
+    {
+        if ($lineup->user_id !== Auth::id()) {
+            abort(403);
+        }
     }
 }

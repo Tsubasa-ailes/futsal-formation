@@ -17,53 +17,55 @@
             </div>
         @else
             <div class="bg-gray-900 border border-gray-800 rounded-lg overflow-hidden">
-                <table class="min-w-full text-sm">
-                    <thead class="bg-gray-800 text-gray-300">
-                        <tr>
-                            <th class="px-4 py-3 text-left">タイトル</th>
-                            <th class="px-4 py-3 text-left">フォーメーション</th>
-                            <th class="px-4 py-3 text-left">保存日時</th>
-                            <th class="px-4 py-3 text-left">操作</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach ($lineups as $lineup)
-                            <tr class="border-t border-gray-800 hover:bg-gray-800">
-                                <td class="px-4 py-3 font-semibold">
-                                    {{ $lineup->title ?? '無題' }}
-                                </td>
-                                <td class="px-4 py-3">
-                                    {{ $lineup->formation_code }}
-                                </td>
-                                <td class="px-4 py-3 text-gray-400">
-                                    {{ $lineup->created_at->format('Y/m/d H:i') }}
-                                </td>
-                                <td class="px-4 py-3">
-                                    <div class="flex gap-2">
-                                        <a href="{{ route('lineups.show', $lineup) }}"
-                                            class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded text-xs">
-                                            詳細
-                                        </a>
-                                        <a href="{{ route('lineups.edit', $lineup) }}"
-                                            class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded text-xs">
-                                            編集
-                                        </a>
-                                        <form method="POST" action="{{ route('lineups.destroy', $lineup) }}"
-                                            onsubmit="return confirm('「{{ e($lineup->title ?? '無題') }}」を削除しますか？');">
-                                            @csrf
-                                            @method('DELETE')
-
-                                            <button type="submit"
-                                                class="cursor-pointer bg-red-600 hover:bg-red-700 text-white px-3 py-2 rounded text-xs">
-                                                削除
-                                            </button>
-                                        </form>
-                                    </div>
-                                </td>
+                <div class="overflow-x-auto">
+                    <table class="min-w-full text-sm">
+                        <thead class="bg-gray-800 text-gray-300">
+                            <tr>
+                                <th class="px-4 py-3 text-left">タイトル</th>
+                                <th class="px-4 py-3 text-left">フォーメーション</th>
+                                <th class="px-4 py-3 text-left">保存日時</th>
+                                <th class="px-4 py-3 text-left">操作</th>
                             </tr>
-                        @endforeach
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            @foreach ($lineups as $lineup)
+                                <tr class="border-t border-gray-800 hover:bg-gray-800">
+                                    <td class="px-4 py-3 font-semibold">
+                                        {{ $lineup->title ?? '無題' }}
+                                    </td>
+                                    <td class="px-4 py-3">
+                                        {{ $lineup->formation_code }}
+                                    </td>
+                                    <td class="px-4 py-3 text-gray-400">
+                                        {{ $lineup->created_at->format('Y/m/d H:i') }}
+                                    </td>
+                                    <td class="px-4 py-3">
+                                        <div class="flex gap-2">
+                                            <a href="{{ route('lineups.show', $lineup) }}"
+                                                class="whitespace-nowrap bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded text-xs">
+                                                詳細
+                                            </a>
+                                            <a href="{{ route('lineups.edit', $lineup) }}"
+                                                class="whitespace-nowrap bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded text-xs">
+                                                編集
+                                            </a>
+                                            <form method="POST" action="{{ route('lineups.destroy', $lineup) }}"
+                                                onsubmit="return confirm('「{{ e($lineup->title ?? '無題') }}」を削除しますか？');">
+                                                @csrf
+                                                @method('DELETE')
+
+                                                <button type="submit"
+                                                    class="whitespace-nowrap cursor-pointer bg-red-600 hover:bg-red-700 text-white px-3 py-2 rounded text-xs">
+                                                    削除
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
             </div>
         @endif
     </div>
