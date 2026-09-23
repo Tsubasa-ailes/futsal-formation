@@ -1,0 +1,304 @@
+﻿# A5:ER FORMAT:21
+# A5:ER ENCODING:UTF8
+# A5:ER Mk-1 Copyright © 2007 m.matsubara
+# A5:SQL Mk-2 Version 2.21.1 Copyright © 1997 - 2026 m.matsubara
+#  https://a5m2.mmatsubara.com
+
+[Manager]
+ProjectName=
+Author=
+MaxEntityRowShow=1000
+ReadOnlyRecommend=0
+PageInfo="Main",2,"A3Landscape",$FFFFFF
+LogicalView=1
+DecodeDomain=0
+ViewFormat=0
+UseNondependenceDashLine=0
+FontName=Tahoma
+FontSize=6
+PaperSize=A4Landscape
+HeaderLeft=
+HeaderCenter=
+HeaderRight=
+FooterLeft=
+FooterCenter=
+FooterRight=
+ShowPageoutRelation=1
+DefaultPkName=%0:s_PKC
+DefaultPkIndexName=%0:s_PKI
+DefaultIndexName=%0:s_IX%1:d
+DefaultFkName=%0:s_FK%1:d
+SqlSeparator=0
+UpperCaseKeyword=0
+ShowTag=1
+ShowCommonAttributes=0
+ShowDisableAttributes=0
+BugFixEntityWidth=1
+
+[Entity]
+PName=formation_slots
+LName=formation_slots
+Comment=
+TableInnerOption=
+TableOption=
+Page=Main
+Left=100
+Top=50
+Field="id","id","bigserial","NOT NULL",0,"","",$FFFFFFFF,""
+Field="formation_template_id","formation_template_id","bigint","NOT NULL",,"","",$FFFFFFFF,""
+Field="slot","slot","smallint","NOT NULL",,"","",$FFFFFFFF,""
+Field="default_x","default_x","numeric(5, 2)","NOT NULL",,"","",$FFFFFFFF,""
+Field="default_y","default_y","numeric(5, 2)","NOT NULL",,"","",$FFFFFFFF,""
+Field="role_label","role_label","character varying(10)",,,"","",$FFFFFFFF,""
+Field="created_at","created_at","timestamp(0) without time zone",,,"","",$FFFFFFFF,""
+Field="updated_at","updated_at","timestamp(0) without time zone",,,"","",$FFFFFFFF,""
+IndexInfo="formation_slots_formation_template_id_slot_unique",2,"formation_template_id,slot",""
+Index=formation_slots_formation_template_id_slot_unique=2,formation_template_id,slot
+EffectMode=None
+Color=$000000
+BkColor=$FFFFFF
+Position="Main",100,50
+ZOrder=-4
+
+[Entity]
+PName=formation_templates
+LName=formation_templates
+Comment=
+TableInnerOption=
+TableOption=
+Page=Main
+Left=800
+Top=250
+Field="id","id","bigserial","NOT NULL",0,"","",$FFFFFFFF,""
+Field="formation_code","formation_code","character varying(10)","NOT NULL",,"","",$FFFFFFFF,""
+Field="name","name","character varying(20)","NOT NULL",,"","",$FFFFFFFF,""
+Field="created_at","created_at","timestamp(0) without time zone",,,"","",$FFFFFFFF,""
+Field="updated_at","updated_at","timestamp(0) without time zone",,,"","",$FFFFFFFF,""
+IndexInfo="formation_templates_formation_code_unique",2,"formation_code",""
+Index=formation_templates_formation_code_unique=2,formation_code
+EffectMode=None
+Color=$000000
+BkColor=$FFFFFF
+Position="Main",800,250
+ZOrder=-5
+
+[Entity]
+PName=lineup_exports
+LName=lineup_exports
+Comment=
+TableInnerOption=
+TableOption=
+Page=Main
+Left=500
+Top=900
+Field="id","id","bigserial","NOT NULL",0,"","",$FFFFFFFF,""
+Field="lineup_id","lineup_id","bigint","NOT NULL",,"","",$FFFFFFFF,""
+Field="export_type","export_type","character varying(20)","NOT NULL",,"","",$FFFFFFFF,""
+Field="file_path","file_path","character varying(255)","NOT NULL",,"","",$FFFFFFFF,""
+Field="created_at","created_at","timestamp(0) without time zone","NOT NULL",,"CURRENT_TIMESTAMP","",$FFFFFFFF,""
+EffectMode=None
+Color=$000000
+BkColor=$FFFFFF
+Position="Main",500,900
+ZOrder=-8
+
+[Entity]
+PName=lineup_players
+LName=lineup_players
+Comment=
+TableInnerOption=
+TableOption=
+Page=Main
+Left=500
+Top=450
+Field="id","id","bigserial","NOT NULL",0,"","",$FFFFFFFF,""
+Field="lineup_id","lineup_id","bigint","NOT NULL",,"","",$FFFFFFFF,""
+Field="slot","slot","smallint","NOT NULL",,"","",$FFFFFFFF,""
+Field="display_name","display_name","character varying(20)","NOT NULL",,"","",$FFFFFFFF,""
+Field="number","number","character varying(3)",,,"","",$FFFFFFFF,""
+Field="x","x","numeric(5, 2)",,,"","",$FFFFFFFF,""
+Field="y","y","numeric(5, 2)",,,"","",$FFFFFFFF,""
+Field="created_at","created_at","timestamp(0) without time zone",,,"","",$FFFFFFFF,""
+Field="updated_at","updated_at","timestamp(0) without time zone",,,"","",$FFFFFFFF,""
+Field="deleted_at","deleted_at","timestamp(0) without time zone",,,"","",$FFFFFFFF,""
+IndexInfo="lineup_players_lineup_id_slot_unique",2,"lineup_id,slot",""
+Index=lineup_players_lineup_id_slot_unique=2,lineup_id,slot
+EffectMode=None
+Color=$000000
+BkColor=$FFFFFF
+Position="Main",500,450
+ZOrder=-9
+
+[Entity]
+PName=lineups
+LName=lineups
+Comment=
+TableInnerOption=
+TableOption=
+Page=Main
+Left=800
+Top=650
+Field="id","id","bigserial","NOT NULL",0,"","",$FFFFFFFF,""
+Field="title","title","character varying(20)",,,"","",$FFFFFFFF,""
+Field="formation_code","formation_code","character varying(10)","NOT NULL",,"","",$FFFFFFFF,""
+Field="note","note","text",,,"","",$FFFFFFFF,""
+Field="created_at","created_at","timestamp(0) without time zone",,,"","",$FFFFFFFF,""
+Field="updated_at","updated_at","timestamp(0) without time zone",,,"","",$FFFFFFFF,""
+Field="deleted_at","deleted_at","timestamp(0) without time zone",,,"","",$FFFFFFFF,""
+Field="user_id","user_id","bigint","NOT NULL",,"","",$FFFFFFFF,""
+EffectMode=None
+Color=$000000
+BkColor=$FFFFFF
+Position="Main",800,650
+ZOrder=-10
+
+[Entity]
+PName=password_reset_tokens
+LName=password_reset_tokens
+Comment=
+TableInnerOption=
+TableOption=
+Page=Main
+Left=100
+Top=1300
+Field="email","email","character varying(255)","NOT NULL",0,"","",$FFFFFFFF,""
+Field="token","token","character varying(255)","NOT NULL",,"","",$FFFFFFFF,""
+Field="created_at","created_at","timestamp(0) without time zone",,,"","",$FFFFFFFF,""
+EffectMode=None
+Color=$000000
+BkColor=$FFFFFF
+Position="Main",100,1300
+ZOrder=-12
+
+[Entity]
+PName=sessions
+LName=sessions
+Comment=
+TableInnerOption=
+TableOption=
+Page=Main
+Left=350
+Top=1300
+Field="id","id","character varying(255)","NOT NULL",0,"","",$FFFFFFFF,""
+Field="user_id","user_id","bigint",,,"","",$FFFFFFFF,""
+Field="ip_address","ip_address","character varying(45)",,,"","",$FFFFFFFF,""
+Field="user_agent","user_agent","text",,,"","",$FFFFFFFF,""
+Field="payload","payload","text","NOT NULL",,"","",$FFFFFFFF,""
+Field="last_activity","last_activity","integer","NOT NULL",,"","",$FFFFFFFF,""
+IndexInfo="sessions_last_activity_index",0,"last_activity",""
+Index=sessions_last_activity_index=0,last_activity
+IndexInfo="sessions_user_id_index",0,"user_id",""
+Index=sessions_user_id_index=0,user_id
+EffectMode=None
+Color=$000000
+BkColor=$FFFFFF
+Position="Main",350,1300
+ZOrder=-13
+
+[Entity]
+PName=users
+LName=users
+Comment=
+TableInnerOption=
+TableOption=
+Page=Main
+Left=1450
+Top=650
+Field="id","id","bigserial","NOT NULL",0,"","",$FFFFFFFF,""
+Field="name","name","character varying(255)","NOT NULL",,"","",$FFFFFFFF,""
+Field="password","password","character varying(255)","NOT NULL",,"","",$FFFFFFFF,""
+Field="remember_token","remember_token","character varying(100)",,,"","",$FFFFFFFF,""
+Field="created_at","created_at","timestamp(0) without time zone",,,"","",$FFFFFFFF,""
+Field="updated_at","updated_at","timestamp(0) without time zone",,,"","",$FFFFFFFF,""
+Field="login_id","login_id","character varying(255)","NOT NULL",,"","",$FFFFFFFF,""
+IndexInfo="users_login_id_unique",2,"login_id",""
+Index=users_login_id_unique=2,login_id
+EffectMode=None
+Color=$000000
+BkColor=$FFFFFF
+Position="Main",1450,650
+ZOrder=-14
+
+[Relation]
+Entity1=users
+Entity2=lineups
+RelationType1=2
+RelationType2=3
+Fields1=id
+Fields2=user_id
+Cardinarity1=
+Cardinarity2=
+Position="MAIN",0,7000,600,6125,R,R,""
+Dependence=0
+Caption=
+PName=
+LineMode=0
+Bar1=700
+Bar2=60
+Bar3=612
+TermPos1=R
+TermPos2=R
+ZOrder=-18
+
+[Relation]
+Entity1=lineups
+Entity2=lineup_players
+RelationType1=2
+RelationType2=3
+Fields1=id
+Fields2=lineup_id
+Cardinarity1=
+Cardinarity2=
+Position="MAIN",0,5300,2100,4516,R,R,""
+Dependence=0
+Caption=
+PName=
+LineMode=0
+Bar1=530
+Bar2=210
+Bar3=452
+TermPos1=R
+TermPos2=R
+ZOrder=-17
+
+[Relation]
+Entity1=lineups
+Entity2=lineup_exports
+RelationType1=2
+RelationType2=3
+Fields1=id
+Fields2=lineup_id
+Cardinarity1=
+Cardinarity2=
+Position="MAIN",0,7500,2311,6478,R,R,""
+Dependence=0
+Caption=
+PName=
+LineMode=0
+Bar1=750
+Bar2=231
+Bar3=648
+TermPos1=R
+TermPos2=R
+ZOrder=-16
+
+[Relation]
+Entity1=formation_templates
+Entity2=formation_slots
+RelationType1=2
+RelationType2=3
+Fields1=id
+Fields2=formation_template_id
+Cardinarity1=
+Cardinarity2=
+Position="MAIN",0,8900,5900,740,R,R,""
+Dependence=0
+Caption=
+PName=
+LineMode=0
+Bar1=890
+Bar2=590
+Bar3=74
+TermPos1=R
+TermPos2=R
+ZOrder=-15
