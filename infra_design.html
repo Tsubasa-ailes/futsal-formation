@@ -1,0 +1,510 @@
+<title>TACTインフラ設計書</title>
+<style>
+  :root{
+    --bg:#f4f5f8;
+    --surface:#ffffff;
+    --surface-2:#edeff4;
+    --text-primary:#1a2030;
+    --text-secondary:#4b5568;
+    --text-muted:#8790a3;
+    --border:#dde1e9;
+    --accent:#2454d1;
+    --accent-soft:#e7edfc;
+    --layer-edge:#b8570f;
+    --layer-edge-soft:#faead9;
+    --layer-compute:#2454d1;
+    --layer-compute-soft:#e7edfc;
+    --layer-data:#0f766e;
+    --layer-data-soft:#e1f3f1;
+    --good:#0f7a4a;
+    --warn:#b8570f;
+    --risk:#c0293c;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#11141c;
+      --surface:#171b26;
+      --surface-2:#1e2330;
+      --text-primary:#e7eaf1;
+      --text-secondary:#aab2c6;
+      --text-muted:#707890;
+      --border:#2a2f3f;
+      --accent:#7292ff;
+      --accent-soft:#202a4a;
+      --layer-edge:#e08a3e;
+      --layer-edge-soft:#3a2a17;
+      --layer-compute:#7292ff;
+      --layer-compute-soft:#1c2540;
+      --layer-data:#3fbfae;
+      --layer-data-soft:#132e2b;
+      --good:#3fbf82;
+      --warn:#e08a3e;
+      --risk:#ef5b6e;
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#11141c;
+    --surface:#171b26;
+    --surface-2:#1e2330;
+    --text-primary:#e7eaf1;
+    --text-secondary:#aab2c6;
+    --text-muted:#707890;
+    --border:#2a2f3f;
+    --accent:#7292ff;
+    --accent-soft:#202a4a;
+    --layer-edge:#e08a3e;
+    --layer-edge-soft:#3a2a17;
+    --layer-compute:#7292ff;
+    --layer-compute-soft:#1c2540;
+    --layer-data:#3fbfae;
+    --layer-data-soft:#132e2b;
+    --good:#3fbf82;
+    --warn:#e08a3e;
+    --risk:#ef5b6e;
+  }
+
+  *{box-sizing:border-box;}
+  body{
+    background:var(--bg);
+    color:var(--text-primary);
+    font-family:"Noto Sans JP","Hiragino Sans",system-ui,sans-serif;
+    padding:0 16px;
+  }
+  .page{
+    max-width:880px;
+    margin:0 auto;
+    padding-block:48px 96px;
+  }
+  h1,h2,h3{
+    font-family:"Zen Kaku Gothic New","Noto Sans JP",system-ui,sans-serif;
+    text-wrap:balance;
+    color:var(--text-primary);
+  }
+  .doc-header{
+    border-bottom:1px solid var(--border);
+    padding-bottom:28px;
+    margin-bottom:32px;
+  }
+  .doc-kicker{
+    font-size:13px;
+    font-weight:500;
+    letter-spacing:.08em;
+    color:var(--accent);
+    margin-bottom:10px;
+  }
+  h1.doc-title{
+    font-size:30px;
+    font-weight:700;
+    line-height:1.4;
+    margin:0 0 18px;
+  }
+  .doc-meta{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(160px,1fr));
+    gap:10px 24px;
+    background:var(--surface-2);
+    border:1px solid var(--border);
+    border-radius:10px;
+    padding:16px 20px;
+  }
+  .doc-meta dt{
+    font-size:12px;
+    color:var(--text-muted);
+    margin-bottom:2px;
+  }
+  .doc-meta dd{
+    margin:0;
+    font-size:14px;
+    color:var(--text-primary);
+    font-weight:500;
+  }
+  nav.toc{
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px 10px;
+    margin:20px 0 40px;
+  }
+  nav.toc a{
+    font-size:13px;
+    color:var(--text-secondary);
+    text-decoration:none;
+    border:1px solid var(--border);
+    border-radius:999px;
+    padding:6px 14px;
+    background:var(--surface);
+  }
+  nav.toc a:hover{ border-color:var(--accent); color:var(--accent); }
+
+  section{ margin-bottom:56px; }
+  .section-head{
+    display:flex;
+    align-items:baseline;
+    gap:14px;
+    margin-bottom:18px;
+    padding-bottom:10px;
+    border-bottom:2px solid var(--border);
+  }
+  .section-num{
+    font-family:"JetBrains Mono",monospace;
+    font-size:14px;
+    color:var(--accent);
+    font-weight:500;
+  }
+  h2.section-title{
+    font-size:21px;
+    font-weight:700;
+    margin:0;
+  }
+  p{
+    font-size:15px;
+    line-height:1.95;
+    color:var(--text-secondary);
+    margin:0 0 14px;
+    max-width:68ch;
+  }
+  strong{ color:var(--text-primary); font-weight:500; }
+
+  .callout{
+    background:var(--accent-soft);
+    border:1px solid var(--border);
+    border-left:3px solid var(--accent);
+    border-radius:0 8px 8px 0;
+    padding:14px 18px;
+    font-size:14px;
+    color:var(--text-secondary);
+    line-height:1.85;
+    margin:18px 0;
+  }
+  .callout strong{ color:var(--accent); }
+
+  figure{ margin:24px 0; }
+  .diagram-wrap{
+    background:var(--surface);
+    border:1px solid var(--border);
+    border-radius:14px;
+    padding:20px;
+    overflow-x:auto;
+  }
+  svg{ display:block; max-width:100%; height:auto; }
+  figcaption{
+    font-size:13px;
+    color:var(--text-muted);
+    margin-top:10px;
+    line-height:1.7;
+  }
+
+  .table-wrap{
+    overflow-x:auto;
+    border:1px solid var(--border);
+    border-radius:10px;
+    margin:18px 0;
+  }
+  table{
+    width:100%;
+    border-collapse:collapse;
+    font-size:13.5px;
+    background:var(--surface);
+  }
+  thead th{
+    text-align:left;
+    font-weight:500;
+    color:var(--text-secondary);
+    background:var(--surface-2);
+    padding:10px 14px;
+    border-bottom:1px solid var(--border);
+    white-space:nowrap;
+  }
+  tbody td{
+    padding:11px 14px;
+    border-bottom:1px solid var(--border);
+    color:var(--text-secondary);
+    vertical-align:top;
+    line-height:1.7;
+  }
+  tbody tr:last-child td{ border-bottom:none; }
+  tbody td:first-child{ color:var(--text-primary); font-weight:500; white-space:nowrap; }
+  code{
+    font-family:"JetBrains Mono",monospace;
+    font-size:12.5px;
+    background:var(--surface-2);
+    border:1px solid var(--border);
+    border-radius:4px;
+    padding:1px 6px;
+    color:var(--text-primary);
+  }
+
+  .status{
+    display:inline-block;
+    font-size:11.5px;
+    font-weight:500;
+    padding:2px 9px;
+    border-radius:999px;
+    white-space:nowrap;
+  }
+  .status.ok{ background:color-mix(in srgb, var(--good) 16%, transparent); color:var(--good); }
+  .status.warn{ background:color-mix(in srgb, var(--warn) 16%, transparent); color:var(--warn); }
+  .status.risk{ background:color-mix(in srgb, var(--risk) 16%, transparent); color:var(--risk); }
+
+  .legend{
+    display:flex;
+    flex-wrap:wrap;
+    gap:16px;
+    font-size:12.5px;
+    color:var(--text-muted);
+    margin-top:14px;
+  }
+  .legend-item{ display:flex; align-items:center; gap:6px; }
+  .legend-swatch{ width:12px; height:12px; border-radius:3px; flex:none; }
+
+  @media (max-width:600px){
+    h1.doc-title{ font-size:24px; }
+    .doc-meta{ grid-template-columns:1fr 1fr; }
+  }
+</style>
+
+<div class="page">
+
+  <header class="doc-header">
+    <div class="doc-kicker">インフラ設計書</div>
+    <h1 class="doc-title">TACT ― フットサルフォーメーションアプリ<br>インフラ設計書</h1>
+    <dl class="doc-meta">
+      <div><dt>対象システム</dt><dd>TACT（futsal-formation）</dd></div>
+      <div><dt>バージョン</dt><dd>1.0</dd></div>
+      <div><dt>作成日</dt><dd>2026-09-21</dd></div>
+      <div><dt>リポジトリ</dt><dd>GitHub（プライベート）</dd></div>
+    </dl>
+  </header>
+
+  <nav class="toc" aria-label="目次">
+    <a href="#overview">01 概要・目的</a>
+    <a href="#diagram">02 構成図</a>
+    <a href="#network">03 ネットワーク設計</a>
+    <a href="#platform">04 プラットフォーム</a>
+  </nav>
+
+  <section id="overview">
+    <div class="section-head">
+      <span class="section-num">01</span>
+      <h2 class="section-title">概要・目的</h2>
+    </div>
+
+    <p>
+      TACTは、フットサルの陣形（フォーメーション）をブラウザ上で作成・保存・管理するWebアプリケーションである。
+      利用者はコート上で選手の配置と名前を入力し、フォーメーションをタイトル・メモとともに保存できる。保存済みのフォーメーションは一覧から詳細確認・編集・削除（ゴミ箱経由での復元にも対応）が可能である。
+    </p>
+    <p>
+      本書の目的は、現時点でのTACTのインフラ構成（ネットワーク・実行基盤・運用体制）を明文化し、運用・保守・障害対応・今後の改善検討の土台となる共通認識を残すことにある。
+    </p>
+
+    <div class="callout">
+      <strong>構成の特徴</strong>：単一のAWS EC2インスタンス上でDocker Composeにより<code>web</code>（Nginx）・<code>app</code>（PHP-FPM / Laravel）・<code>db</code>（PostgreSQL）の3コンテナを稼働させ、Cloudflareをエッジ（DNS・TLS終端の一部・CDN）として前段に配置する構成。開発環境（ローカルWindows + Docker Desktop）と本番環境は、Compose定義ファイルを<code>docker-compose.yml</code>（開発用）／<code>docker-compose.prod.yml</code>（本番用）に分離して管理している。
+    </div>
+  </section>
+
+  <section id="diagram">
+    <div class="section-head">
+      <span class="section-num">02</span>
+      <h2 class="section-title">構成図</h2>
+    </div>
+
+    <p>
+      利用者からのリクエストは、Cloudflareのエッジを経由してAWS EC2上のオリジンサーバーへ届く。オリジン側はDocker Composeで定義した3コンテナ構成（Nginx → PHP-FPM → PostgreSQL）で、コンテナ間通信はDockerの内部ネットワークに閉じている。デプロイはGitHub（プライベートリポジトリ）からの手動<code>git pull</code>による。
+    </p>
+
+    <figure>
+      <div class="diagram-wrap">
+        <svg viewBox="0 0 920 660" role="img" aria-label="利用者のブラウザからCloudflareのエッジを経由し、AWS EC2上のDocker Compose構成（Nginx、PHP-FPM、PostgreSQLの3コンテナ）へHTTPSで到達する構成図。GitHubのプライベートリポジトリから手動でgit pullしてデプロイする経路もあわせて示す。">
+
+          <defs>
+            <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+              <path d="M0,0 L10,5 L0,10 z" fill="currentColor"/>
+            </marker>
+            <marker id="arrowMuted" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+              <path d="M0,0 L10,5 L0,10 z" fill="var(--text-muted)"/>
+            </marker>
+          </defs>
+
+          <!-- User -->
+          <rect x="350" y="16" width="220" height="54" rx="10" fill="var(--surface-2)" stroke="var(--border)"/>
+          <text x="460" y="38" text-anchor="middle" font-size="13" font-weight="500" fill="currentColor">利用者（ブラウザ）</text>
+          <text x="460" y="56" text-anchor="middle" font-size="11" fill="var(--text-muted)">Webアクセス</text>
+
+          <line x1="460" y1="70" x2="460" y2="108" stroke="currentColor" stroke-width="1.5" marker-end="url(#arrow)"/>
+          <text x="474" y="94" font-size="11.5" fill="var(--text-secondary)">HTTPS :443</text>
+
+          <!-- Cloudflare -->
+          <rect x="190" y="108" width="540" height="96" rx="12" fill="var(--layer-edge-soft)" stroke="var(--layer-edge)"/>
+          <text x="210" y="132" font-size="14" font-weight="700" fill="var(--layer-edge)">Cloudflare（エッジ / CDN）</text>
+          <text x="210" y="153" font-size="11.5" fill="var(--text-secondary)">・DNSプロキシ（オレンジクラウド）</text>
+          <text x="210" y="171" font-size="11.5" fill="var(--text-secondary)">・SSL/TLSモード：Full（Strict）</text>
+          <text x="210" y="189" font-size="11.5" fill="var(--text-secondary)">・エッジでのHTTPS終端 / CDNキャッシュ</text>
+
+          <line x1="460" y1="204" x2="460" y2="248" stroke="currentColor" stroke-width="1.5" marker-end="url(#arrow)"/>
+          <text x="474" y="222" font-size="11.5" fill="var(--text-secondary)">HTTPS :443</text>
+          <text x="474" y="238" font-size="11.5" fill="var(--text-secondary)">Origin CA証明書で検証</text>
+
+          <!-- GitHub -->
+          <rect x="700" y="16" width="180" height="54" rx="10" fill="var(--surface-2)" stroke="var(--border)"/>
+          <text x="790" y="38" text-anchor="middle" font-size="13" font-weight="500" fill="currentColor">GitHub</text>
+          <text x="790" y="56" text-anchor="middle" font-size="11" fill="var(--text-muted)">プライベートリポジトリ</text>
+          <path d="M790,70 C790,160 760,190 705,255" fill="none" stroke="var(--text-muted)" stroke-width="1.3" stroke-dasharray="5 4" marker-end="url(#arrowMuted)"/>
+          <text x="705" y="150" font-size="11" fill="var(--text-muted)">git pull</text>
+          <text x="676" y="164" font-size="11" fill="var(--text-muted)">（手動デプロイ）</text>
+
+          <!-- Host box -->
+          <rect x="60" y="248" width="800" height="380" rx="14" fill="var(--surface)" stroke="var(--border)" stroke-width="1.5"/>
+          <text x="80" y="274" font-size="12.5" font-weight="500" fill="var(--text-secondary)">AWS EC2（Ubuntu / ap-southeast-2）— Docker Compose：docker-compose.prod.yml</text>
+
+          <!-- web -->
+          <rect x="100" y="296" width="210" height="78" rx="10" fill="var(--layer-compute-soft)" stroke="var(--layer-compute)"/>
+          <text x="205" y="320" text-anchor="middle" font-size="13" font-weight="700" fill="var(--layer-compute)">web</text>
+          <text x="205" y="337" text-anchor="middle" font-size="11" fill="var(--text-secondary)">Nginx 1.25（alpine）</text>
+          <text x="205" y="353" text-anchor="middle" font-size="11" fill="var(--text-secondary)">:80（→443へ）/ :443</text>
+          <text x="205" y="369" text-anchor="middle" font-size="10.5" fill="var(--text-muted)">静的アセット配信</text>
+
+          <line x1="310" y1="335" x2="356" y2="335" stroke="currentColor" stroke-width="1.5" marker-end="url(#arrow)"/>
+          <text x="313" y="326" font-size="10.5" fill="var(--text-secondary)">fastcgi :9000</text>
+
+          <!-- app -->
+          <rect x="356" y="296" width="210" height="78" rx="10" fill="var(--layer-compute-soft)" stroke="var(--layer-compute)"/>
+          <text x="461" y="320" text-anchor="middle" font-size="13" font-weight="700" fill="var(--layer-compute)">app</text>
+          <text x="461" y="337" text-anchor="middle" font-size="11" fill="var(--text-secondary)">PHP-FPM 8.4（Laravel）</text>
+          <text x="461" y="353" text-anchor="middle" font-size="11" fill="var(--text-secondary)">:9000</text>
+          <text x="461" y="369" text-anchor="middle" font-size="10.5" fill="var(--text-muted)">アプリケーション本体</text>
+
+          <line x1="566" y1="335" x2="612" y2="335" stroke="currentColor" stroke-width="1.5" marker-end="url(#arrow)"/>
+          <text x="571" y="326" font-size="10.5" fill="var(--text-secondary)">:5432</text>
+
+          <!-- db -->
+          <rect x="612" y="296" width="210" height="78" rx="10" fill="var(--layer-data-soft)" stroke="var(--layer-data)"/>
+          <text x="717" y="320" text-anchor="middle" font-size="13" font-weight="700" fill="var(--layer-data)">db</text>
+          <text x="717" y="337" text-anchor="middle" font-size="11" fill="var(--text-secondary)">PostgreSQL 17</text>
+          <text x="717" y="353" text-anchor="middle" font-size="11" fill="var(--text-secondary)">:5432</text>
+          <text x="717" y="369" text-anchor="middle" font-size="10.5" fill="var(--text-muted)">アプリケーションデータ</text>
+
+          <!-- volumes / mounts -->
+          <line x1="205" y1="374" x2="205" y2="404" stroke="var(--text-muted)" stroke-width="1.2" marker-end="url(#arrowMuted)"/>
+          <rect x="100" y="404" width="210" height="60" rx="8" fill="var(--surface-2)" stroke="var(--border)"/>
+          <text x="205" y="424" text-anchor="middle" font-size="10.5" fill="var(--text-secondary)">証明書マウント（ro）</text>
+          <text x="205" y="439" text-anchor="middle" font-size="10.5" fill="var(--text-secondary)">/etc/nginx/certs</text>
+          <text x="205" y="453" text-anchor="middle" font-size="10" fill="var(--text-muted)">Cloudflare Origin CA</text>
+
+          <line x1="461" y1="374" x2="461" y2="404" stroke="var(--text-muted)" stroke-width="1.2" marker-end="url(#arrowMuted)"/>
+          <rect x="356" y="404" width="210" height="60" rx="8" fill="var(--surface-2)" stroke="var(--border)"/>
+          <text x="461" y="424" text-anchor="middle" font-size="10.5" fill="var(--text-secondary)">永続ボリューム</text>
+          <text x="461" y="439" text-anchor="middle" font-size="10.5" fill="var(--text-secondary)">laravel_storage</text>
+          <text x="461" y="453" text-anchor="middle" font-size="10.5" fill="var(--text-secondary)">laravel_cache</text>
+
+          <line x1="717" y1="374" x2="717" y2="404" stroke="var(--text-muted)" stroke-width="1.2" marker-end="url(#arrowMuted)"/>
+          <rect x="612" y="404" width="210" height="60" rx="8" fill="var(--surface-2)" stroke="var(--border)"/>
+          <text x="717" y="424" text-anchor="middle" font-size="10.5" fill="var(--text-secondary)">永続ボリューム</text>
+          <text x="717" y="439" text-anchor="middle" font-size="10.5" fill="var(--text-secondary)">dbdata</text>
+          <text x="717" y="453" text-anchor="middle" font-size="10" fill="var(--text-muted)">Postgresデータ本体</text>
+
+          <!-- notes -->
+          <rect x="100" y="488" width="722" height="112" rx="10" fill="var(--surface-2)" stroke="var(--border)"/>
+          <text x="120" y="512" font-size="11.5" font-weight="500" fill="var(--text-secondary)">開発環境との差分（docker-compose.yml）</text>
+          <text x="120" y="533" font-size="11" fill="var(--text-muted)">・本番はViteでビルド済みの静的アセット（public/build）をnginxが配信。node（Viteサーバー）は本番に含めない</text>
+          <text x="120" y="552" font-size="11" fill="var(--text-muted)">・pgAdmin（DB管理画面）は開発専用。本番構成には含めない</text>
+          <text x="120" y="571" font-size="11" fill="var(--text-muted)">・db の :5432 は開発環境ではホストに公開しているが、本番ではコンテナ内部通信のみ</text>
+          <text x="120" y="590" font-size="11" fill="var(--text-muted)">・証明書パスも開発（Windowsローカルパス）と本番（/etc/nginx/certs）で異なる</text>
+
+        </svg>
+      </div>
+      <figcaption>
+        図1：利用者のリクエストはCloudflareのエッジでTLS終端された後、Origin CA証明書で検証された再暗号化HTTPS（Full Strict）でEC2上のNginxへ届く。Nginxはfastcgiで PHP-FPM（app）へ、appはPostgreSQL（db）へアクセスする。コンテナ間通信はDocker内部ネットワークに閉じており、db・appはインターネットから直接到達できない。デプロイはGitHubから手動<code>git pull</code>で行う。
+      </figcaption>
+    </figure>
+  </section>
+
+  <section id="network">
+    <div class="section-head">
+      <span class="section-num">03</span>
+      <h2 class="section-title">ネットワーク設計</h2>
+    </div>
+
+    <p>
+      本番環境で外部に公開しているポートはCloudflare経由の80／443のみである。コンテナ間通信（Nginx→PHP-FPM、PHP-FPM→PostgreSQL）はDocker Composeのデフォルトブリッジネットワーク内に閉じており、サービス名（<code>app</code>、<code>db</code>）による名前解決で到達する。
+    </p>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>区間</th><th>プロトコル / ポート</th><th>用途</th><th>公開範囲</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>利用者 → Cloudflare</td>
+            <td>HTTPS :443</td>
+            <td>Webアクセス</td>
+            <td>インターネット全体</td>
+          </tr>
+          <tr>
+            <td>Cloudflare → EC2（web）</td>
+            <td>HTTPS :443（Origin CA証明書）</td>
+            <td>オリジンプル（Full Strict）</td>
+            <td><span class="status warn">要確認</span> セキュリティグループでCloudflareIP等への制限は未実施</td>
+          </tr>
+          <tr>
+            <td>web → app</td>
+            <td>fastcgi :9000</td>
+            <td>PHP実行</td>
+            <td>Docker内部ネットワークのみ</td>
+          </tr>
+          <tr>
+            <td>app → db</td>
+            <td>PostgreSQL :5432</td>
+            <td>データアクセス</td>
+            <td>Docker内部ネットワークのみ（外部非公開）</td>
+          </tr>
+          <tr>
+            <td>管理者 → EC2</td>
+            <td>SSH :22</td>
+            <td>サーバー運用・デプロイ</td>
+            <td><span class="status warn">要確認</span> 接続元IP制限の状況は未確認</td>
+          </tr>
+          <tr>
+            <td>（開発環境のみ）</td>
+            <td>:5432 / :5173 / :5050</td>
+            <td>DB直接接続 / Vite開発サーバー / pgAdmin</td>
+            <td>開発機（ローカル）のみ。本番では非公開</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout">
+      <strong>TLSについて</strong>：Cloudflareの<strong>Full（Strict）</strong>モードを採用しているため、利用者⇔Cloudflare間・Cloudflare⇔オリジン間の両区間がHTTPSで暗号化される。オリジン側はCloudflareが発行するOrigin CA証明書（<code>cert.pem</code> / <code>key.pem</code>）をNginxに配置して自己証明書を検証させている。秘密鍵はサーバー上で<code>chmod 600</code>により所有者のみ読み取り可能な状態にしている。
+    </div>
+  </section>
+
+  <section id="platform">
+    <div class="section-head">
+      <span class="section-num">04</span>
+      <h2 class="section-title">プラットフォーム</h2>
+    </div>
+
+    <p>採用している技術要素は以下の通り。バージョンは実際に稼働しているものを記載している。</p>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>レイヤー</th><th>技術 / サービス</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>クラウド / IaaS</td><td>AWS EC2（Ubuntu、ap-southeast-2 / シドニーリージョン）</td></tr>
+          <tr><td>CDN / エッジ</td><td>Cloudflare（DNSプロキシ、SSL/TLS: Full (Strict)、Origin CA証明書）</td></tr>
+          <tr><td>コンテナ基盤</td><td>Docker / Docker Compose（開発: <code>docker-compose.yml</code>、本番: <code>docker-compose.prod.yml</code>）</td></tr>
+          <tr><td>Webサーバー</td><td>Nginx 1.25（alpine）</td></tr>
+          <tr><td>アプリケーション実行環境</td><td>PHP 8.4（PHP-FPM）</td></tr>
+          <tr><td>アプリケーションフレームワーク</td><td>Laravel</td></tr>
+          <tr><td>データベース</td><td>PostgreSQL 17（Dockerコンテナ、名前付き永続ボリューム）</td></tr>
+          <tr><td>フロントエンドビルド</td><td>Vite + Tailwind CSS v4（本番はビルド済み静的アセットを配信、開発時のみViteサーバー稼働）</td></tr>
+          <tr><td>認証方式</td><td>独自実装（login_id / password、bcryptハッシュ化、ログイン・登録にレート制限）</td></tr>
+          <tr><td>ソースコード管理</td><td>GitHub（プライベートリポジトリ）</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+</div>
