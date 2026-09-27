@@ -27,7 +27,7 @@
 
         {{-- フォーメーション選択 --}}
         <div class="bg-gray-900 p-6 rounded mb-6">
-            <form method="GET" action="{{ route('lineups.edit', $lineup) }}">
+            <form id="formation-select-form" method="GET" action="{{ route('lineups.edit', $lineup) }}">
                 <select name="formation_code" class="bg-gray-800 text-white p-2 rounded">
                     @foreach ($formationTemplates as $template)
                         <option value="{{ $template->formation_code }}"
@@ -225,11 +225,72 @@
 
 @push('scripts')
     <script>
-        document.querySelectorAll('.player-name').forEach(input => {
-            input.addEventListener('input', e => {
-                let slot = e.target.dataset.slot;
-                document.getElementById('court-name-' + slot).textContent = e.target.value;
+        document.addEventListener('DOMContentLoaded', () => {
+            const DRAFT_KEY = 'edit_form_draft_{{ $lineup->id }}';
+
+            // 陣形プルダウンの変更によるページ再読み込みで消えないよう、
+            // 一度だけ下書きを復元してすぐ削除する（バリデーション失敗時はLaravelのold()側で復元されるため）
+            const draftRaw = sessionStorage.getItem(DRAFT_KEY);
+            if (draftRaw) {
+                sessionStorage.removeItem(DRAFT_KEY);
+
+                try {
+                    const draft = JSON.parse(draftRaw);
+
+                    const titleInput = document.querySelector('input[name="title"]');
+                    if (titleInput && draft.title) {
+                        titleInput.value = draft.title;
+                    }
+
+                    const noteInput = document.querySelector('textarea[name="note"]');
+                    if (noteInput && draft.note) {
+                        noteInput.value = draft.note;
+                    }
+
+                    document.querySelectorAll('.player-name').forEach(input => {
+                        const value = draft.players && draft.players[input.dataset.slot];
+
+                        if (value) {
+                            input.value = value;
+
+                            const courtName = document.getElementById('court-name-' + input.dataset.slot);
+                            if (courtName) {
+                                courtName.textContent = value;
+                            }
+                        }
+                    });
+                } catch (e) {
+                    // 壊れた下書きは無視する
+                }
+            }
+
+            document.querySelectorAll('.player-name').forEach(input => {
+                input.addEventListener('input', e => {
+                    let slot = e.target.dataset.slot;
+                    document.getElementById('court-name-' + slot).textContent = e.target.value;
+                });
             });
+
+            const formationForm = document.getElementById('formation-select-form');
+            if (formationForm) {
+                formationForm.addEventListener('submit', () => {
+                    const titleInput = document.querySelector('input[name="title"]');
+                    const noteInput = document.querySelector('textarea[name="note"]');
+                    const players = {};
+
+                    document.querySelectorAll('.player-name').forEach(input => {
+                        if (input.value) {
+                            players[input.dataset.slot] = input.value;
+                        }
+                    });
+
+                    sessionStorage.setItem(DRAFT_KEY, JSON.stringify({
+                        title: titleInput ? titleInput.value : '',
+                        note: noteInput ? noteInput.value : '',
+                        players,
+                    }));
+                });
+            }
         });
     </script>
 @endpush
