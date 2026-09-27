@@ -72,6 +72,8 @@ class LineupController extends Controller
 
         $validated = $request->validate([
             'title' => ['nullable', 'string', 'max:20'],
+            'formation_code' => ['required', 'string', 'max:10', 'exists:formation_templates,formation_code'],
+            'note' => ['nullable', 'string', 'max:1000'],
             'players' => ['required', 'array'],
             'players.*.id' => ['required', 'exists:lineup_players,id'],
             'players.*.display_name' => ['required', 'string', 'max:20'],
@@ -80,6 +82,8 @@ class LineupController extends Controller
         DB::transaction(function () use ($validated, $lineup) {
             $lineup->update([
                 'title' => $validated['title'] ?? '無題',
+                'formation_code' => $validated['formation_code'],
+                'note' => $validated['note'] ?? null,
             ]);
 
             foreach ($validated['players'] as $playerData) {

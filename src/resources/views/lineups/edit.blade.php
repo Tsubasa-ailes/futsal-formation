@@ -105,10 +105,6 @@
 
                             <input type="hidden" name="players[{{ $slot->slot }}][slot]" value="{{ $slot->slot }}">
 
-                            <input type="hidden" name="players[{{ $slot->slot }}][x]" value="{{ $slot->default_x }}">
-
-                            <input type="hidden" name="players[{{ $slot->slot }}][y]" value="{{ $slot->default_y }}">
-
                             <input type="text" name="players[{{ $slot->slot }}][display_name]"
                                 value="{{ old('players.' . $slot->slot . '.display_name', $player?->display_name) }}"
                                 class="player-name w-full bg-gray-900 p-2 rounded" data-slot="{{ $slot->slot }}"
